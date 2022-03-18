@@ -10,3 +10,8 @@
     background-color: #00C000;
     color: #FF3FFF
 }
+#description_text{
+    background-color: gold;
+    text-align: center;
+    font-size: 12px;
+}
