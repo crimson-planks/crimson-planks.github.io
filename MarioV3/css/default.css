@@ -1,3 +1,13 @@
+@font-face {
+    font-family: comicSans;
+    src: url(comic.ttf);
+}
+div {
+    font-family:comicSans;
+}
+#default_font{
+    font-family: Arial, Helvetica, sans-serif;
+}
 .button{
     border: none;
     cursor: pointer;
