@@ -29,3 +29,20 @@ div {
     text-align: center;
     font-size: 12px;
 }
+#difficulty_text{
+    background-color: white;
+    color: black;
+    text-align: center;
+    margin: auto;
+    font-size: 40px;
+    width: 100%;
+}
+#difficulty_button{
+    background-color: #A5A5A5;
+    color: black;
+    text-align: center;
+    margin: auto;
+    font-size: 40px;
+    width: 100%;
+    height:220px;
+}
