@@ -4,7 +4,7 @@ var lastUpdate = Date.now()
 
 const amountOfGenerators = 8
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < amountOfGenerators; i++) {
   let generator = {
     cost: new Decimal("10"),
     bought: 0,
