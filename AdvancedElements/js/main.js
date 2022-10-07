@@ -4,8 +4,9 @@ var notation = "scientific";
 var lastUpdate = Date.now()
 
 const amountOfGenerators = 8
-//const notationProperty = JSON.parse()
-
+$.getJSON("./json/notation_property.json",function(data){
+    var NotationData=data;
+});
 for (let i = 0; i < amountOfGenerators; i++) {
   let generator = {
     cost: new Decimal("10"),
