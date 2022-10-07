@@ -2,10 +2,10 @@ var money=new Decimal("0");
 var GeneratorList = []
 var notation = "scientific";
 var lastUpdate = Date.now()
-
+var NotationData;
 const amountOfGenerators = 8
 $.getJSON("./json/notation_property.json",function(data){
-    var NotationData=data;
+    NotationData=data;
 });
 for (let i = 0; i < amountOfGenerators; i++) {
   let generator = {
