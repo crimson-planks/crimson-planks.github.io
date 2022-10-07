@@ -1,8 +1,10 @@
 var money=new Decimal("0");
 var GeneratorList = []
+var notation = "scientific";
 var lastUpdate = Date.now()
 
 const amountOfGenerators = 8
+//const notationProperty = JSON.parse()
 
 for (let i = 0; i < amountOfGenerators; i++) {
   let generator = {
@@ -19,8 +21,8 @@ function clickButton(){
 }
 
 
-function format(amount, notation=0){
-    if(notation==0){
+function format(amount, notation="scientific"){
+    if(notation=="scientific"){
         let power=Math.floor(amount.log10());
         let mentissa=amount.dividedBy(new Decimal("10").pow(power));
         if(power < 3) return amount.toFixed(2);
