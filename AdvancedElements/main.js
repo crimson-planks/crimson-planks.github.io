@@ -44,7 +44,7 @@ function productionLoop(diff){
 
 function MainLoop(){
     var diff = (Date.now() - lastUpdate)/1000;
-    console.log(lastUpdate)
+    //console.log(lastUpdate)
     productionLoop(diff);
     UpdateGUI();
     lastUpdate = Date.now();
