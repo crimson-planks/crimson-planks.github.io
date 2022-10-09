@@ -13,3 +13,17 @@
     width: 150px;
     height: 30px;
 }
+.unavailable-button{
+    border: 1px solid #8d1a10;
+    background-color: #5f5b59;
+}
+.buyable-button{
+    border: 1px solid #27a44f;
+    background-color: #ffffff;
+}
+.unavailable-button:hover{
+    background-color: #8d1a10;
+}
+.buyable-button:hover{
+    background-color: #27a44f;
+}

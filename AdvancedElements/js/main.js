@@ -16,7 +16,7 @@ $.getJSON("./json/notation_property.json",function(data){
 
 for (let i = 0; i < MAX_GENERATOR; i++) {
   let generator = {
-    cost: new Decimal("10"),
+    cost: new Decimal("10").mul(new Decimal("10").pow(i*i)),
     bought: new Decimal("0"),
     amount: new Decimal("0"),
     mult: new Decimal("1"),
@@ -26,13 +26,13 @@ for (let i = 0; i < MAX_GENERATOR; i++) {
 }
 
 function putText(n){
-    let tmp=""
+    let tmp="";
     if(player.amountOfGenerators>n){
         player.amountOfGenerators=0;
     }
     tmp="<table>";
-    for(let i=player.amountOfGenerators;i<n;i++){
-        tmp+="<tr><td><div class=\"generator\" id=\"gen"+(i+1)+"\"></div></td><td><button id=\"BG"+(i+1)+"\" class=\"buy-button\" type=\"button\"></button></td></tr>";
+    for(let i=0;i<n;i++){
+        tmp+="<tr><td><div class=\"generator\" id=\"gen"+(i+1)+"\"></div></td><td><button id=\"BG"+(i+1)+"\" class=\"buy-button\" type=\"button\" onclick=\"buyGenerator("+(i+1)+")\"></button></td></tr>";
     }
     tmp+="</table>";
     console.log(tmp);
@@ -43,20 +43,45 @@ function clickButton(){
     player.money = player.money.plus(new Decimal("1"));
 }
 
-function format(amount, dec=2, notation="scientific"){
-    if(notation=="scientific"){
-        let power=Math.floor(amount.log10());
-        let mentissa=amount.dividedBy(new Decimal("10").pow(power));
-        if(power < 3) return amount.toFixed(dec);
-        return mentissa.toFixed(dec) + "e" + power;
+function buyGenerator(Gnum,Gtype="hydrogen",manual=true){
+    let g=player.GeneratorList[Gtype][Gnum-1];
+    if(getIfBuyable(g.cost)){
+        g.bought=g.bought.plus(new Decimal("1"));
+        g.amount=g.amount.plus(new Decimal("1"));
+        player.money=player.money.minus(g.cost);
+        g.cost=g.cost.mul(g.costMult);
+        if(g.bought>5){
+            g.cost=g.cost.mul(new Decimal("10").pow(g.bought.pow(new Decimal("0.5")).floor()));
+        }
+        g.mult=g.mult.mul(2);
+    }
+}
+
+function getIfBuyable(cost,money=player.money){
+    if(money.sign()!=cost.sign()){
+        return false;
+    }
+    if(cost.abs().lessThanOrEqualTo(money.abs())){
+        return true;
+    }
+    else{
+        return false;
     }
 }
 function UpdateGUI(){
     document.getElementById("currency").innerHTML=format(player.money);
     for(let i=0;i<player.amountOfGenerators;i++){
         let g=player.GeneratorList["hydrogen"][i];
-        document.getElementById("gen"+(i+1)).innerHTML=i+1+" Generator Amount: " + format(g.amount);
-        document.getElementById("BG"+(i+1)).innerHTML="Cost: " + player.GeneratorList["hydrogen"][i].cost;
+        document.getElementById("gen"+(i+1)).innerHTML=" Generator "+(i+1)+"<br> Amount: " + format(g.amount)+" x"+format(g.mult);
+        let tmpelem=document.getElementById("BG"+(i+1));
+        if(getIfBuyable(player.GeneratorList["hydrogen"][i].cost)){
+            
+            tmpelem.classList.add('buyable-button');
+        }
+        else{
+            tmpelem.classList.add('unavailable-button');
+        }
+        document.getElementById("BG"+(i+1)).innerHTML="Cost: " + format(player.GeneratorList["hydrogen"][i].cost,0);
     }
 }
 function productionLoop(diff){
