@@ -1,47 +1,69 @@
-var money=new Decimal("0");
-var GeneratorList = []
-var notation = "scientific";
 var lastUpdate = Date.now()
+var player = {
+    money: new Decimal("0"),
+    GeneratorList: {"hydrogen":[]},
+    notation: "scientific",
+    amountOfGenerators: 0
+}
+
 var NotationData;
-const amountOfGenerators = 8
+
+const MAX_GENERATOR = 9;
+
 $.getJSON("./json/notation_property.json",function(data){
     NotationData=data;
 });
-for (let i = 0; i < amountOfGenerators; i++) {
+
+for (let i = 0; i < MAX_GENERATOR; i++) {
   let generator = {
     cost: new Decimal("10"),
-    bought: 0,
+    bought: new Decimal("0"),
     amount: new Decimal("0"),
-    mult: new Decimal("1")
+    mult: new Decimal("1"),
+    costMult: new Decimal("10")
   }
-  GeneratorList.push(generator)
+  player.GeneratorList["hydrogen"].push(generator);
 }
 
+function putText(n){
+    let tmp=""
+    if(player.amountOfGenerators>n){
+        player.amountOfGenerators=0;
+    }
+    tmp="<table>";
+    for(let i=player.amountOfGenerators;i<n;i++){
+        tmp+="<tr><td><div class=\"generator\" id=\"gen"+(i+1)+"\"></div></td><td><button id=\"BG"+(i+1)+"\" class=\"buy-button\" type=\"button\"></button></td></tr>";
+    }
+    tmp+="</table>";
+    console.log(tmp);
+    document.getElementById("generator-div").innerHTML=tmp
+    player.amountOfGenerators=n;
+}
 function clickButton(){
-    money = money.plus(new Decimal("1"));
+    player.money = player.money.plus(new Decimal("1"));
 }
 
-
-function format(amount, notation="scientific"){
+function format(amount, dec=2, notation="scientific"){
     if(notation=="scientific"){
         let power=Math.floor(amount.log10());
         let mentissa=amount.dividedBy(new Decimal("10").pow(power));
-        if(power < 3) return amount.toFixed(2);
-        return mentissa.toFixed(2) + "e" + power;
+        if(power < 3) return amount.toFixed(dec);
+        return mentissa.toFixed(dec) + "e" + power;
     }
 }
 function UpdateGUI(){
-    document.getElementById("currency").innerHTML=format(money);
-    for(let i=0;i<amountOfGenerators;i++){
-        let g=GeneratorList[i];
-        document.getElementById("gen"+(i+1)).innerHTML="Amount: " + format(g.amount);
+    document.getElementById("currency").innerHTML=format(player.money);
+    for(let i=0;i<player.amountOfGenerators;i++){
+        let g=player.GeneratorList["hydrogen"][i];
+        document.getElementById("gen"+(i+1)).innerHTML=i+1+" Generator Amount: " + format(g.amount);
+        document.getElementById("BG"+(i+1)).innerHTML="Cost: " + player.GeneratorList["hydrogen"][i].cost;
     }
 }
 function productionLoop(diff){
-    money=money.plus(GeneratorList[0].amount.mul(GeneratorList[0].mult).mul(new Decimal(diff)));
-    for(let i=1;i<amountOfGenerators;i++){
-        n=GeneratorList[i-1];
-        n.amount=n.amount.plus(GeneratorList[i].amount.mul(GeneratorList[i].mult).mul(new Decimal(diff)));
+    player.money=player.money.plus(player.GeneratorList["hydrogen"][0].amount.mul(player.GeneratorList["hydrogen"][0].mult).mul(new Decimal(diff)));
+    for(let i=1;i<player.amountOfGenerators;i++){
+        n=player.GeneratorList["hydrogen"][i-1];
+        n.amount=n.amount.plus(player.GeneratorList["hydrogen"][i].amount.mul(player.GeneratorList["hydrogen"][i].mult).mul(new Decimal(diff)));
     }
 }
 
@@ -52,4 +74,7 @@ function MainLoop(){
     UpdateGUI();
     lastUpdate = Date.now();
 }
+
+putText(4);
+
 setInterval(MainLoop, 50);

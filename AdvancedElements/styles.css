@@ -1,0 +1,15 @@
+#currency{
+    font-size: large;
+    color: #000000;
+}
+.text{
+    color: #808080;
+}
+.middle{
+    text-align: center;
+}
+.buy-button{
+    color:black;
+    width: 150px;
+    height: 30px;
+}
