@@ -1,12 +1,22 @@
+*{
+    font-size: 16px;
+}
 #currency{
     font-size: large;
     color: #000000;
+}
+.description{
+    font-size: 13px;
 }
 .text{
     color: #808080;
 }
 .middle{
     text-align: center;
+}
+.get-money-button{
+    background-color: #808080;
+    border:#000000
 }
 .buy-button{
     color:black;
@@ -31,4 +41,12 @@
     color:black;
     width: 150px;
     height: 50px;
+}
+.unlock-button{
+    color:black;
+    width: 150px;
+    height: 80px;
+}
+.hidden{
+    display: none;
 }

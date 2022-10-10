@@ -20,17 +20,27 @@ function ResetDimensionRange(start,end,type="hydrogen"){
         ResetDimension(i-1,type);
     }
 }
+function GetMultByDimb(){
+    player.GeneratorList["hydrogen"][0].multByDimB=new Decimal("2").pow(player.DimensionBoostAmount);
+}
 function DimensionBoost(){
     let requiredGenerator=0;
     requiredGenerator=getDimboostRequiredGenID();
+    calMult();
     if(getIfBuyable(player.DimensionBoostCost,player.GeneratorList["hydrogen"][getDimboostRequiredGenID()-1].amount)){
         ResetDimensionRange(1,8);
         if(player.DimensionBoostAmount.lessThan(4)) player.currentMaxGenerator++;
+        else{
+            player.DimensionBoostCost=player.DimensionBoostCost.add("7");
+        }
         player.DimensionBoostAmount=player.DimensionBoostAmount.add(1);
         player.TotalAstroids=player.TotalAstroids.add(1);
         player.money=player.defaultMoney;
-        player.GeneratorList["hydrogen"][0].multByDimB=new Decimal("2").pow(player.TotalAstroids);
+        GetMultByDimb();
         putText(1);
+        return true;
     }
-    calMult();
+    else{
+        return false;
+    }
 }

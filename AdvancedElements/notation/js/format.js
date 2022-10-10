@@ -1,4 +1,4 @@
-function format(amount, dec=2, smalldec=2, notation="scientific"){
+function format(amount, dec=2, smalldec=2, notation=player.notation){
     if(notation=="scientific"){
         let power=Math.floor(amount.log10());
         let mentissa=amount.dividedBy(new Decimal("10").pow(power));
