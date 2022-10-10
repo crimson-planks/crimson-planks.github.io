@@ -1,6 +1,6 @@
 function getDimboostRequiredGenID(){
-    if(player.DimensionBoostAmount<4){
-        requiredGenerator=4+player.DimensionBoostAmount;
+    if(player.DimensionBoostAmount.lessThan(4)){
+        requiredGenerator=player.DimensionBoostAmount.add(4);
     }
     else{
         requiredGenerator=8;
@@ -25,8 +25,12 @@ function DimensionBoost(){
     requiredGenerator=getDimboostRequiredGenID();
     if(getIfBuyable(player.DimensionBoostCost,player.GeneratorList["hydrogen"][getDimboostRequiredGenID()-1].amount)){
         ResetDimensionRange(1,8);
-        if(player.DimensionBoostAmount<4) player.currentMaxGenerator++;
-        player.clickMult=player.clickMult.mul(2);
+        if(player.DimensionBoostAmount.lessThan(4)) player.currentMaxGenerator++;
+        player.DimensionBoostAmount=player.DimensionBoostAmount.add(1);
+        player.TotalAstroids=player.TotalAstroids.add(1);
         player.money=player.defaultMoney;
+        player.GeneratorList["hydrogen"][0].multByDimB=new Decimal("2").pow(player.TotalAstroids);
+        putText(1);
     }
+    calMult();
 }

@@ -5,13 +5,15 @@ var player = {
     notation: "scientific",
     amountOfGenerators: 0,
     currentMaxGenerator: 4,
-    DimensionBoostAmount: 0,
+    DimensionBoostAmount: new Decimal("0"),
     DimensionBoostCost: new Decimal("7"),
     clickAmount: 0,
     clickMult: new Decimal("1"),
     defaultMoney: new Decimal("0"),
-    TotalAstroids: 0,
-    Energy: 0
+    TotalAstroids: new Decimal("0"),
+    Energy: 0,
+    TotalHydrogen: new Decimal("0"),
+    CostDriftFactor: new Decimal("0.5")
 }
 
 var NotationData;
@@ -28,7 +30,10 @@ for (let i = 0; i < MAX_GENERATOR; i++) {
     bought: new Decimal("0"),
     amount: new Decimal("0"),
     mult: new Decimal("1"),
-    costMult: new Decimal("10")
+    multByDimB: new Decimal("1"),
+    totalMult: new Decimal("1"),
+    costMult: new Decimal("10"),
+    costMultDrift: new Decimal("10")
   }
   player.GeneratorList["hydrogen"].push(generator);
 }
@@ -40,7 +45,7 @@ function putText(n){
     }
     tmp="<table>";
     for(let i=0;i<n;i++){
-        tmp+="<tr><td><div class=\"generator\" id=\"gen"+(i+1)+"\"></div></td><td><button id=\"BG"+(i+1)+"\" class=\"buy-button\" type=\"button\" onclick=\"buyGenerator("+(i+1)+")\"></button></td></tr>";
+        tmp+=`<tr><td><div class="generator" id="gen${i+1}"></div></td><td><button id="BG${i+1}" class="buy-button" type="button" onclick="buyGenerator(${i+1})"></button></td></tr>`;
     }
     tmp+="</table>";
     //console.log(tmp);
@@ -58,11 +63,11 @@ function buyGenerator(Gnum,Gtype="hydrogen",buyType="manual"){
         g.bought=g.bought.plus(new Decimal("1"));
         g.amount=g.amount.plus(new Decimal("1"));
         player.money=player.money.minus(g.cost);
-        g.costMult=new Decimal("10");
-        if(g.bought>6){
-            g.costMult=g.costMult.mul(new Decimal("10").pow(g.bought.add(Gnum-6-1).pow(new Decimal("0.5")).floor()));
+        g.costMultDrift=g.costMult
+        if(g.bought>6&&Gtype=="hydrogen"){
+            g.costMultDrift=g.costMultDrift.mul(g.costMult.pow(g.bought.add(Gnum-6-1).pow(player.CostDriftFactor).floor()));
         }
-        g.cost=g.cost.mul(g.costMult);
+        g.cost=g.cost.mul(g.costMultDrift);
         g.mult=g.mult.mul(2);
 
         if(player.amountOfGenerators==Gnum && player.amountOfGenerators<player.currentMaxGenerator){
@@ -96,11 +101,17 @@ function changeColorIfBuyable(element,cost,money=player.money){
     }
 }
 function UpdateGUI(){
+    let tmpstring;
     document.getElementById("currency").innerHTML=format(player.money);
     document.getElementById("get-money-button").innerHTML="Click to get "+ format(player.clickMult,2,0) +" hydrogen";
+    tmpstring=player.TotalAstroids+[];
+    if(player.DimensionBoostAmount.lessThan(player.TotalAstroids)){
+        tmpstring+=" - "+player.TotalAstroids.minus(player.DimensionBoostAmount);
+    }
+    document.getElementById("dimB-text").innerHTML=`Hydrogen Astroids(${tmpstring}): requires ${format(player.DimensionBoostCost,2,0)} Hydrogen Generator-${getDimboostRequiredGenID()}s`;
     for(let i=0;i<player.amountOfGenerators;i++){
         let g=player.GeneratorList["hydrogen"][i];
-        document.getElementById("gen"+(i+1)).innerHTML="Hydrogen Generator-"+(i+1)+"<br> Amount: " + format(g.amount)+"("+format(g.bought,2,0)+") x"+format(g.mult);
+        document.getElementById("gen"+(i+1)).innerHTML="Hydrogen Generator-"+(i+1)+"<br> Amount: " + format(g.amount)+"("+format(g.bought,2,0)+") x"+format(g.totalMult);
         
         changeColorIfBuyable(
             document.getElementById("BG"+(i+1)),
@@ -114,11 +125,15 @@ function UpdateGUI(){
     document.getElementById("")
 }
 function productionLoop(diff){
-    player.money=player.money.plus(player.GeneratorList["hydrogen"][0].amount.mul(player.GeneratorList["hydrogen"][0].mult).mul(new Decimal(diff)));
+    let moneyAdd=player.GeneratorList["hydrogen"][0].amount.mul(player.GeneratorList["hydrogen"][0].totalMult).mul(new Decimal(diff));
+    player.money=player.money.plus(moneyAdd);
+    player.TotalHydrogen=player.TotalHydrogen.plus(moneyAdd);
+    calMult();
     for(let i=1;i<player.amountOfGenerators;i++){
-        n=player.GeneratorList["hydrogen"][i-1];
-        n.amount=n.amount.plus(player.GeneratorList["hydrogen"][i].amount.mul(player.GeneratorList["hydrogen"][i].mult).mul(new Decimal(diff)));
+        g=player.GeneratorList["hydrogen"][i-1];
+        g.amount=g.amount.plus(player.GeneratorList["hydrogen"][i].amount.mul(player.GeneratorList["hydrogen"][i].totalMult).mul(diff));
     }
+    player.clickMult=new Decimal("2").pow(player.DimensionBoostAmount);
 }
 
 function MainLoop(){
