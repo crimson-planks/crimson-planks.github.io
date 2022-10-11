@@ -1,6 +1,10 @@
 *{
     font-size: 16px;
 }
+#loading-screen{
+    height:100%;
+    width:100%;
+}
 #currency{
     font-size: large;
     color: #000000;

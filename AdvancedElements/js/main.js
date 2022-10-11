@@ -1,4 +1,3 @@
-var lastUpdate = Date.now()
 var player = {
     money: new Decimal("0"),
     GeneratorList: {"hydrogen":[]},
@@ -7,6 +6,7 @@ var player = {
     currentMaxGenerator: 4,
     DimensionBoostAmount: new Decimal("0"),
     DimensionBoostCost: new Decimal("7"),
+    lastUpdate: Date.now(),
     clickAmount: 0,
     clickMult: new Decimal("1"),
     defaultMoney: new Decimal("0"),
@@ -96,7 +96,7 @@ function changeColorIfBuyable(element,cost,money=player.money){
 }
 function UpdateGUI(){
     let tmpstring;
-    let tmpHtml;
+    let tmpHtml, tmpHtml2;
     document.getElementById("currency").innerHTML=format(player.money);
     document.getElementById("get-money-button").innerHTML="Click to get "+ format(player.clickMult,2,0) +" hydrogen";
     document.getElementById("currency-per-second").innerHTML=format(currencyPerSecond);
@@ -121,7 +121,6 @@ function UpdateGUI(){
         player.DimensionBoostCost,player.GeneratorList["hydrogen"][getDimboostRequiredGenID()-1].amount);
     
     tmpHtml=document.getElementById("energy-div");
-
     if(getIfBuyable(new Decimal("1"),player.TotalAstroids)){
         tmpHtml.classList.remove("hidden");
     }
@@ -129,11 +128,14 @@ function UpdateGUI(){
         tmpHtml.classList.add("hidden");
     }
     tmpHtml=document.getElementById("unlock-energy-button");
+    tmpHtml2=document.getElementById("energy-main-div");
     if(player.energy.unlocked){
         tmpHtml.classList.add("hidden");
+        tmpHtml2.classList.remove("hidden");
     }
     else{
         tmpHtml.classList.remove("hidden");
+        tmpHtml2.classList.add("hidden");
     }
     changeColorIfBuyable(
         document.getElementById("unlock-energy-button"),
@@ -155,13 +157,12 @@ function productionLoop(diff){
 }
 
 function MainLoop(){
-    let diff = (Date.now() - lastUpdate)/1000;
+    let diff = (Date.now() - player.lastUpdate)/1000;
     //console.log(diff+[]+lastUpdate);
     productionLoop(diff);
     UpdateGUI();
-    lastUpdate = Date.now();
+    player.lastUpdate = Date.now();
 }
 initGen();
 putText(1);
-
 setInterval(MainLoop, 50);
