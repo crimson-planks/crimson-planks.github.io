@@ -4,6 +4,7 @@ var player = {
     notation: "scientific",
     amountOfGenerators: 0,
     currentMaxGenerator: 4,
+    currentVisibleGenerators: 1,
     DimensionBoostAmount: new Decimal("0"),
     DimensionBoostCost: new Decimal("7"),
     lastUpdate: Date.now(),
@@ -18,7 +19,9 @@ var player = {
         unlockCost: new Decimal("2")
     },
     currentChallange: "", 
-    CostDriftStartValue: new Decimal("6")
+    CostDriftStartValue: new Decimal("6"),
+    selectedTab: "generator-tab"
+
 }
 var currencyPerSecond = new Decimal("0");
 var NotationData;

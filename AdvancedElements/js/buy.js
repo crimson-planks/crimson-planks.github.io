@@ -12,7 +12,8 @@ function buyGenerator(Gnum,Gtype="hydrogen",buyType="manual"){
         g.mult=g.mult.mul(2);
 
         if(player.amountOfGenerators==Gnum && player.amountOfGenerators<player.currentMaxGenerator){
-            putText(Gnum+1);
+            player.currentVisibleGenerators=Gnum+1;
+            putText(player.currentVisibleGenerators);
         }
         return true;
     }
