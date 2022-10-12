@@ -17,7 +17,8 @@ var player = {
         unlocked: false,
         unlockCost: new Decimal("2")
     },
-    currentChallange: ""
+    currentChallange: "", 
+    CostDriftStartValue: new Decimal("6")
 }
 var currencyPerSecond = new Decimal("0");
 var NotationData;

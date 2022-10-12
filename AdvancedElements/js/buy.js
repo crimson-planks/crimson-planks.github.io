@@ -5,8 +5,8 @@ function buyGenerator(Gnum,Gtype="hydrogen",buyType="manual"){
         g.amount=g.amount.plus(new Decimal("1"));
         player.money=player.money.minus(g.cost);
         g.costMultDrift=g.costMult
-        if(g.bought>6&&Gtype=="hydrogen"){
-            g.costMultDrift=g.costMultDrift.mul(g.costMult.pow(g.bought.add(Gnum-6-1).pow(player.CostDriftFactor).floor()));
+        if(g.bought.greaterThan(player.CostDriftStartValue)&&Gtype=="hydrogen"){
+            g.costMultDrift=g.costMultDrift.mul(g.costMult.pow(g.bought.add(new Decimal(Gnum).minus(player.CostDriftStartValue).minus(1)).pow(player.CostDriftFactor).floor()));
         }
         g.cost=g.cost.mul(g.costMultDrift);
         g.mult=g.mult.mul(2);
