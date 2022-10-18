@@ -1,9 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset+="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Advanced Elements</title>
+<<<<<<< Updated upstream
 </head>
 <body>
 	<button onclick="clickButton()">Click to get 1 hydrogen</button>
@@ -17,9 +19,120 @@
 		<div class="generator" id="gen6"></div>
 		<div class="generator" id="gen7"></div>
 		<div class="generator" id="gen8"></div>
+=======
+	<style>
+		body *{
+			font-family: "Courier New", monospace;
+			font-size: 13px;
+		}
+	</style>
+</head>
+<body>
+	<span id="version-text"></span>
+	<div id="extra-links">
+		<a href="https://crimson-planks.github.io/AdvancedElements/Changelog">Changelog</a>
+	</div>
+	<button id="get-money-button" onclick="ClickButton()">Click to get 1 hydrogen</button>
+	<p class="text middle">
+		You have 
+		<span id="currency">0</span>
+		hydrogen.
+	</p>
+	<p class="text middle description" style="size: 10px;">
+		You are getting
+		<span id="currency-per-second">0</span>
+		hydrogen per second.
+	</p>
+	<div id="navigation-top">
+		<button id="generator-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('generator-tab')">Generators</button>
+		<button id="energy-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('energy-tab')">Energy</button>
+	</div>
+	<div id="generator-tab" class="hidden tab">
+		<table>
+			<tr>
+				<td>
+					<div id="generator-div">
+					</div>
+					<div id="dimB-div">
+						<span id="dimB-text">Hydrogen Astroids(0): requires 7 Hydrogen Generator-4s</span>
+						<button id="dimB-button" class="reset-button description" type="button" onclick="DimensionBoost()">Reset for a new generator</button>
+					</div>
+				</td>
+				<td style="vertical-align: top;">
+					<div id="unlock-div" class="hidden">
+						<button id="unlock-energy-button", class="unlock-button" onclick="UnlockEnergy()">
+							<span>Unlock Energy</span>
+							<span id="unlock-energy-description" class="description">Cost: 2 Hydrogen Astroids</span>
+						</button>
+						<button id="unlock-fusion-button" class=" unlock-button hidden">
+							<span>Unlock Fusion</span>
+							<span id="unlock-fusion-description" class="description">Cost: 1e100 hydrogen</span>
+						</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+>>>>>>> Stashed changes
+	</div>
+	<div id="energy-tab" class="hidden">
+		<p id="energy-text1">
+			0 Astroids are producing 0 energy per second.
+		</p>
+		<p id="energy-text2">
+			You have 0 energy, which is boosting all generators by 1.00x.
+		</p>
+		<p id="energy-text3">
+			Allocatable Astroids: 0, Total Astroids: 0
+		</p>
+		<table>
+			<tr>
+				<td>
+					<button onclick="AllocateAstroid(1)">Allocate 1 Astroid</button>
+				</td>
+				<td>
+					<button onclick="AllocateAstroid(-1)">Allocate -1 Astroids</button>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+	<div id="option-tab" class="hidden">
+		<table class="center" style="width:auto;">
+			<tr>
+				<button class="option-button buyable-button" onclick="save()">Save</button>
+			</tr>
+		</table>
+	</div>
+	<div id="statistics-tab" class="hidden">
+		Temporary Statistics Text
+		<p>
+			<span style="font-weight: bold;">General</span>
+		</p>
+	</div>
+	<div id="achievement-tab" class="hidden">
+		Temporary Achievement Text
+	</div>
+	<div id="navigation-bottom">
+		<button id="option-tab-button" class="navigation-button buyable-button" onclick="ChangeTab('option-tab')">Options</button>
+		<button id="statistics-tab-button" class="navigation-button buyable-button" onclick="ChangeTab('statistics-tab')">Statistics</button>
+		<button id="achievement-tab-button" class="navigation-button buyable-button" onclick="ChangeTab('achievement-tab')">Achievements</button>
 	</div>
 </body>
+<<<<<<< Updated upstream
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="js/break_infinity.js"></script>
+=======
+<script src="js/jquery-3.6.1.min.js" type="text/javascript"></script>
+<script src="js/notify.min.js"></script>
+<script src="notation/js/break_eternity.min.js"></script>
+<script src="js/variables.js"></script>
+<script src="notation/js/format.js"></script>
+<script src="js/save.js"></script>
+<script src="js/buy.js"></script>
+<script src="js/multiplier.js"></script>
+<script src="js/reset.js"></script>
+<script src="js/update_gui.js"></script>
+<script src="js/init.js"></script>
+>>>>>>> Stashed changes
 <script src="js/main.js"></script>
 </html>

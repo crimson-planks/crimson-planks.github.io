@@ -1,0 +1,102 @@
+body *{
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+}
+#loading-screen{
+    height:100%;
+    width:100%;
+}
+#currency{
+    font-size: large;
+    color: #000000;
+}
+.description{
+    font-size: 13px;
+}
+.text{
+    color: #808080;
+}
+.middle{
+    text-align: center;
+}
+.get-money-button{
+    background-color: #808080;
+    border:#000000
+}
+.buy-button{
+    color:black;
+    width: 150px;
+    height: 30px;
+}
+.unavailable-button{
+    border: 1px solid #8d1a10;
+    background-color: #5f5b59;
+}
+.buyable-button{
+    border: 1px solid #27a44f;
+    background-color: #ffffff;
+}
+.unavailable-button:hover{
+    background-color: #8d1a10;
+}
+.buyable-button:hover{
+    background-color: #27a44f;
+}
+.reset-button{
+    color:black;
+    width: 150px;
+    height: 50px;
+}
+.unlock-button{
+    color:black;
+    width: 150px;
+    height: 80px;
+}
+.hidden{
+    display: none;
+}
+.center{
+    margin: auto;
+}
+#extra-links{
+    font-size: 12px;
+    width: 100%;
+    bottom:20%;
+    right: 5%;
+    text-align:center;
+}
+#navigation-top{
+    font-size: 20px;
+    width: 100%;
+    top:10%;
+    text-align: center;
+}
+#navigation-bottom{
+    font-size: 20px;
+    position: fixed;
+    width: 100%;
+    bottom:5%;
+    text-align: center;
+}
+.op-button{
+    width:75px;
+    height: 35px;
+}
+.navigation-button{
+    min-width: 75px;
+    width: fit-content;
+    height: 25px;
+}
+.option-button{
+    width: 150px;
+    height: 50px;
+}
+#version-text{
+    position: fixed;
+    left:0%;
+    bottom:0%;
+}
+.notifyjs-bootstrap-blue{
+    border: 1px solid #2378af;
+    background-color: #459aef;
+}
