@@ -4,22 +4,8 @@
 	<meta charset+="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/styles.css">
 	<title>Advanced Elements</title>
-<<<<<<< Updated upstream
-</head>
-<body>
-	<button onclick="clickButton()">Click to get 1 hydrogen</button>
-	<div id="currency">0</div>
-	<div id="generator-div">
-		<div class="generator" id="gen1"></div>
-		<div class="generator" id="gen2"></div>
-		<div class="generator" id="gen3"></div>
-		<div class="generator" id="gen4"></div>
-		<div class="generator" id="gen5"></div>
-		<div class="generator" id="gen6"></div>
-		<div class="generator" id="gen7"></div>
-		<div class="generator" id="gen8"></div>
-=======
 	<style>
 		body *{
 			font-family: "Courier New", monospace;
@@ -64,7 +50,7 @@
 							<span>Unlock Energy</span>
 							<span id="unlock-energy-description" class="description">Cost: 2 Hydrogen Astroids</span>
 						</button>
-						<button id="unlock-fusion-button" class=" unlock-button hidden">
+						<button id="unlock-fusion-button" class=" unlock-button hidden" onclick="unlockFusion()">
 							<span>Unlock Fusion</span>
 							<span id="unlock-fusion-description" class="description">Cost: 1e100 hydrogen</span>
 						</button>
@@ -72,7 +58,6 @@
 				</td>
 			</tr>
 		</table>
->>>>>>> Stashed changes
 	</div>
 	<div id="energy-tab" class="hidden">
 		<p id="energy-text1">
@@ -118,10 +103,6 @@
 		<button id="achievement-tab-button" class="navigation-button buyable-button" onclick="ChangeTab('achievement-tab')">Achievements</button>
 	</div>
 </body>
-<<<<<<< Updated upstream
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-<script src="js/break_infinity.js"></script>
-=======
 <script src="js/jquery-3.6.1.min.js" type="text/javascript"></script>
 <script src="js/notify.min.js"></script>
 <script src="notation/js/break_eternity.min.js"></script>
@@ -133,6 +114,5 @@
 <script src="js/reset.js"></script>
 <script src="js/update_gui.js"></script>
 <script src="js/init.js"></script>
->>>>>>> Stashed changes
 <script src="js/main.js"></script>
 </html>

@@ -106,3 +106,6 @@ function AllocateAstroid(amount){
         }
     }
 }
+function unlockFusion(){
+    alert("Coming Soon(not true)!");
+}
