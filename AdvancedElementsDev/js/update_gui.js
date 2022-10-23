@@ -1,15 +1,47 @@
-const MAX_GENERATOR = 9;
-
-const amountOfGenerators = 8
-$.getJSON("./json/notation_property.json",function(data){
-    var NotationData=data;
-});
-
-function ClickButton(){
-    player.money = player.money.plus(player.clickMult);
-    player.clickAmount++;
+function ChangeColorIfBuyable(element,cost,money=player.money){
+    if(GetIfBuyable(cost,money)){
+        element.classList.remove('unavailable-button');
+        element.classList.add('buyable-button');
+    }
+    else{
+        element.classList.remove('buyable-button');
+        element.classList.add('unavailable-button');
+    }
 }
-
+function ShowIfBoolean(element,boolean){
+    if(boolean){
+        element.classList.remove("hidden");
+    }
+    else{
+        element.classList.add("hidden");
+    }
+}
+function PutText(n){
+    for(let i=0;i<n;i++){
+        document.getElementById("genRow"+(i+1)).classList.remove("hidden");
+    }
+    for(let i=n;i<MAX_GENERATOR;i++){
+        document.getElementById("genRow"+(i+1)).classList.add("hidden");
+    }
+    //console.log(tmp);
+    player.amountOfGenerators=n;
+}
+function ToggleTab(tabName="floating-notation-tab"){
+    let element=document.getElementById(tabName);
+    ShowIfBoolean(element,[...element.classList].includes("hidden"));
+}
+function ChangeTab(tabName="generator-tab",sudo=false){
+    if(!sudo&&tabName==selectedTab){
+        ShowIfBoolean(document.getElementById(selectedTab),false);
+        ShowIfBoolean(document.getElementById("generator-tab"),true);
+        selectedTab="generator-tab";
+        return "generator-tab";
+    }
+    ShowIfBoolean(document.getElementById(selectedTab),false);
+    ShowIfBoolean(document.getElementById(tabName),true);
+    selectedTab=tabName;
+    return tabName;
+}
 function UpdateGUI(){
     notatison=player.notation;
     let tmpstring;
@@ -60,44 +92,6 @@ function UpdateGUI(){
     document.getElementById("energy-text2").innerHTML=`You have ${format(player.energy.amount)} energy, which is boosting all generators by ${format(getMultFromEnergy())}x.`
     document.getElementById("energy-text3").innerHTML=`Allocatable Astroids: ${format(allocatableAstroids)}, Total Astroids: ${format(player.totalAstroids)}`
     //fusion
-    ShowIfBoolean(document.getElementById("unlock-fusion-button"),GetIfBuyable(player.fusion.showCost));
+    ShowIfBoolean(document.getElementById("unlock-fusion-button"),GetIfBuyable(fusionShowCost));
     ChangeColorIfBuyable(document.getElementById("unlock-fusion-button"),player.fusion.unlockCost);
 }
-function ProductionLoop(diff){
-    ({totalAstroids,generatorList,energy}=player);
-    ({astroidsAllocated}=player.energy);
-    moneyAdd=generatorList["hydrogen"][0].amount.mul(generatorList["hydrogen"][0].totalMult).mul(new Decimal(diff));
-    currencyPerSecond=moneyAdd.mul(1/diff);
-    player.money=player.money.plus(moneyAdd);
-    player.totalHydrogen=player.totalHydrogen.plus(moneyAdd);
-    CalMult();
-    for(let i=1;i<player.amountOfGenerators;i++){
-        g=generatorList["hydrogen"][i-1];
-        g.amount=g.amount.plus(generatorList["hydrogen"][i].amount.mul(generatorList["hydrogen"][i].totalMult).mul(diff));
-    }
-    player.clickMult=new Decimal("2").pow(player.astroidAmount);
-    //energy
-
-    allocatableAstroids=totalAstroids.minus(astroidsAllocated);
-    energyPerSecond=energy.astroidsAllocated;
-    energy.amount=energy.amount.add(energyPerSecond.mul(diff));
-}
-
-function MainLoop(){
-    let diff = (Date.now() - player.lastUpdate)/1000;
-    //console.log(diff+[]+lastUpdate);
-    ProductionLoop(diff);
-    UpdateGUI();
-    player.lastUpdate = Date.now();
-}
-window.addEventListener('keydown', function (e) {
-    if(e.key.toLowerCase()=='m'){
-        BuyMax();
-    }
-  }, false);
-initHtml();
-initGen();
-initLoad();
-initTab();
-initNotify();
-setInterval(MainLoop, 50);

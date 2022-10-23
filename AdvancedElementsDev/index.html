@@ -16,7 +16,7 @@
 <body>
 	<span id="version-text"></span>
 	<div id="extra-links">
-		<a href="https://crimson-planks.github.io/AdvancedElements/Changelog">Changelog</a>
+		<a href="https://crimson-planks.github.io/AdvancedElements/changelog">Changelog</a>
 	</div>
 	<button id="get-money-button" onclick="ClickButton()">Click to get 1 hydrogen</button>
 	<p class="text middle">
@@ -32,6 +32,7 @@
 	<div id="navigation-top">
 		<button id="generator-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('generator-tab')">Generators</button>
 		<button id="energy-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('energy-tab')">Energy</button>
+		<button id="fusion-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('fusion-tab')">Fusion</button>
 	</div>
 	<div id="generator-tab" class="hidden tab">
 		<table>
@@ -50,7 +51,7 @@
 							<span>Unlock Energy</span>
 							<span id="unlock-energy-description" class="description">Cost: 2 Hydrogen Astroids</span>
 						</button>
-						<button id="unlock-fusion-button" class=" unlock-button hidden" onclick="unlockFusion()">
+						<button id="unlock-fusion-button" class="unlock-button hidden" onclick="UnlockFusion()">
 							<span>Unlock Fusion</span>
 							<span id="unlock-fusion-description" class="description">Cost: 1e100 hydrogen</span>
 						</button>
@@ -84,7 +85,19 @@
 	<div id="option-tab" class="hidden">
 		<table class="center" style="width:auto;">
 			<tr>
-				<button class="option-button buyable-button" onclick="save()">Save</button>
+				<th><button class="option-button buyable-button" onclick="save()">Save</button></th>
+				<th><button class="option-button buyable-button">Notation: N/A</button></th>
+			</tr>
+		</table>
+	</div>
+	<div id="floating-notation-tab" class="hidden">
+		<table style="margin: auto;">
+			<tr>
+				<th><button>ddd</button></th>
+				<th><button>ddew</button></th>
+			</tr>
+			<tr>
+				<th><button onclick="ToggleTab('floating-notation-tab')">Close</button></th>
 			</tr>
 		</table>
 	</div>

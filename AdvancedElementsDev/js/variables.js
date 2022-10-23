@@ -1,5 +1,10 @@
 const arrayOfTypes=[typeof(true), typeof(0), typeof(""), typeof(undefined)]
-const smallInfinity = new Decimal(2).pow(1024);
+//max value of 64 bit floating point in javascript
+const smallInfinity = new Decimal(Number.MAX_VALUE);
+
+//max value with break_infinity.js
+const mediumInfinity= new Decimal("1e9e15");
+//new Decimal("10").pow(15).mul(9)
 var currentVersion = "a0.1.0+20221018r1";
 var player = {
     money: new Decimal("0"),
@@ -36,7 +41,6 @@ var player = {
     ],
     fusion:{
         unlocked: false,
-        showCost: new Decimal("1e80"),
         unlockCost: new Decimal("1e100")
     }
 }
@@ -45,6 +49,7 @@ var currencyPerSecond = new Decimal("0");
 var energyPerSecond = new Decimal("0");
 var selectedTab="generator-tab"
 var tabArray=["generator", "energy"];
+var fusionShowCost= new Decimal("1e60");
 ({notation}=player);
 var dev={
     repeatNotification(amount=50){

@@ -100,3 +100,10 @@ body *{
     border: 1px solid #2378af;
     background-color: #459aef;
 }
+#floating-notation-tab{
+    margin: auto;
+    position: fixed;
+    width: 100%;
+    top:30%;
+    text-align: center;
+}
