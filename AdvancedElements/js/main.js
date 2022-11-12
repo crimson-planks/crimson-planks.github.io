@@ -1,172 +1,86 @@
-var player = {
-    money: new Decimal("0"),
-    GeneratorList: {"hydrogen":[]},
-    notation: "scientific",
-    amountOfGenerators: 0,
-    currentMaxGenerator: 4,
-    currentVisibleGenerators: 1,
-    DimensionBoostAmount: new Decimal("0"),
-    DimensionBoostCost: new Decimal("7"),
-    lastUpdate: Date.now(),
-    clickAmount: 0,
-    clickMult: new Decimal("1"),
-    defaultMoney: new Decimal("0"),
-    TotalAstroids: new Decimal("0"),
-    TotalHydrogen: new Decimal("0"),
-    CostDriftFactor: new Decimal("0.5"),
-    energy: {
-        unlocked: false,
-        unlockCost: new Decimal("2")
-    },
-    currentChallange: "", 
-    CostDriftStartValue: new Decimal("6"),
-    selectedTab: "generator-tab"
-
-}
-var currencyPerSecond = new Decimal("0");
-var NotationData;
-
 const MAX_GENERATOR = 9;
 
-$.getJSON("./json/notation_property.json",function(data){
-    NotationData=data;
-});
+const amountOfGenerators = 8
 
-for (let i = 0; i < MAX_GENERATOR; i++) {
-  let generator = {
-    cost: new Decimal("10").mul(new Decimal("10").pow(i*i)),
-    bought: new Decimal("0"),
-    amount: new Decimal("0"),
-    mult: new Decimal("1"),
-    multByDimB: new Decimal("1"),
-    totalMult: new Decimal("1"),
-    costMult: new Decimal("10"),
-    costMultDrift: new Decimal("10")
-  }
-  player.GeneratorList["hydrogen"].push(generator);
-}
-function initGen(){
-    let tmp="<table>";
-    for(let i=0;i<MAX_GENERATOR;i++){
-        tmp+=   `<tr id="genRow${i+1}" class="hidden">
-                    <td>
-                        <span class="generator" id="gen${i+1}"></span>
-                        <span></span>
-                    </td>
-                    <td>
-                        <button id="BG${i+1}" class="buy-button" type="button" onclick="buyGenerator(${i+1})"></button>
-                    </td>
-                </tr>`;
-    }
-    tmp+="</table>";
-    //console.log(tmp);
-    document.getElementById("generator-div").innerHTML=tmp
-}
-function putText(n){
-    for(let i=0;i<n;i++){
-        document.getElementById("genRow"+(i+1)).classList.remove("hidden");
-    }
-    for(let i=n;i<MAX_GENERATOR;i++){
-        document.getElementById("genRow"+(i+1)).classList.add("hidden");
-    }
-    //console.log(tmp);
-    player.amountOfGenerators=n;
-}
-function clickButton(){
+function ClickButton(){
     player.money = player.money.plus(player.clickMult);
-    player.clickAmount++;
+    player.clickAmount=player.clickAmount.add(1);
 }
 
-function getIfBuyable(cost,money=player.money){
-    if(money.sign()!=cost.sign()){
-        return false;
-    }
-    if(cost.abs().lessThanOrEqualTo(money.abs())){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-function changeColorIfBuyable(element,cost,money=player.money){
-    if(getIfBuyable(cost,money)){
-        element.classList.remove('unavailable-button');
-        element.classList.add('buyable-button');
-    }
-    else{
-        element.classList.remove('buyable-button');
-        element.classList.add('unavailable-button');
-    }
-}
-function UpdateGUI(){
-    let tmpstring;
-    let tmpHtml, tmpHtml2;
-    document.getElementById("currency").innerHTML=format(player.money);
-    document.getElementById("get-money-button").innerHTML="Click to get "+ format(player.clickMult,2,0) +" hydrogen";
-    document.getElementById("currency-per-second").innerHTML=format(currencyPerSecond);
 
-    tmpstring=player.TotalAstroids+[];
-    if(player.DimensionBoostAmount.lessThan(player.TotalAstroids)){
-        tmpstring+=" - "+player.TotalAstroids.minus(player.DimensionBoostAmount);
+function ProductionLoop(diff){
+    ({totalAstroids,generatorList,energy}=player);
+    ({astroidsAllocated}=player.energy);
+    ({He}=player.upgrades)
+    currencyPerSecond=generatorList["H"][0].amount.mul(generatorList["H"][0].totalMult);
+    if(player.fusion.activated){
+        currencyPerSecond=currencyPerSecond.pow(0.5);
+        player.money=player.money.mul(player.fusion.hydrogenLoseRate.pow(player.money.abs().add(1).absLog10().pow(player.fusion.hydrogenLoseDriftFactor)).pow(diff));
     }
-    document.getElementById("dimB-text").innerHTML=`Hydrogen Astroids(${tmpstring}): requires ${format(player.DimensionBoostCost,2,0)} Hydrogen Generator-${getDimboostRequiredGenID()}s`;
-    for(let i=0;i<player.amountOfGenerators;i++){
-        let g=player.GeneratorList["hydrogen"][i];
-        document.getElementById("gen"+(i+1)).innerHTML="Hydrogen Generator-"+(i+1)+"<br> Amount: " + format(g.amount)+"("+format(g.bought,2,0)+") x"+format(g.totalMult);
-        
-        changeColorIfBuyable(
-            document.getElementById("BG"+(i+1)),
-            player.GeneratorList["hydrogen"][i].cost);
-        document.getElementById("BG"+(i+1)).innerHTML="Cost: " + format(player.GeneratorList["hydrogen"][i].cost,0,0);
-    }
-    changeColorIfBuyable(
-        document.getElementById("dimB-button"),
-        
-        player.DimensionBoostCost,player.GeneratorList["hydrogen"][getDimboostRequiredGenID()-1].amount);
-    
-    tmpHtml=document.getElementById("energy-div");
-    if(getIfBuyable(new Decimal("1"),player.TotalAstroids)){
-        tmpHtml.classList.remove("hidden");
-    }
-    else{
-        tmpHtml.classList.add("hidden");
-    }
-    tmpHtml=document.getElementById("unlock-energy-button");
-    tmpHtml2=document.getElementById("energy-main-div");
-    if(player.energy.unlocked){
-        tmpHtml.classList.add("hidden");
-        tmpHtml2.classList.remove("hidden");
-    }
-    else{
-        tmpHtml.classList.remove("hidden");
-        tmpHtml2.classList.add("hidden");
-    }
-    changeColorIfBuyable(
-        document.getElementById("unlock-energy-button"),
-        player.energy.unlockCost,
-        player.DimensionBoostAmount);
-}
-function productionLoop(diff){
-    moneyAdd=player.GeneratorList["hydrogen"][0].amount.mul(player.GeneratorList["hydrogen"][0].totalMult).mul(new Decimal(diff));
-    currencyPerSecond=moneyAdd.mul(1/diff)
+    moneyAdd=currencyPerSecond.mul(new Decimal(diff));
     player.money=player.money.plus(moneyAdd);
-    player.TotalHydrogen=player.TotalHydrogen.plus(moneyAdd);
-    GetMultByDimb();
-    calMult();
+    player.totalHydrogen=player.totalHydrogen.plus(moneyAdd);
+    CalEnergyMult();
+    CalMult();
     for(let i=1;i<player.amountOfGenerators;i++){
-        g=player.GeneratorList["hydrogen"][i-1];
-        g.amount=g.amount.plus(player.GeneratorList["hydrogen"][i].amount.mul(player.GeneratorList["hydrogen"][i].totalMult).mul(diff));
+        g=generatorList["H"][i-1];
+        g.amount=g.amount.plus(generatorList["H"][i].amount.mul(generatorList["H"][i].totalMult).mul(diff));
     }
-    player.clickMult=new Decimal("2").pow(player.DimensionBoostAmount);
-}
+    player.clickMult=new Decimal("2").pow(player.astroidAmount);
+    //energy
 
+    allocatableAstroids=totalAstroids.minus(astroidsAllocated);
+    energyPerSecond=energy.astroidsAllocated.mul(energy.mult);
+    energy.amount=energy.amount.add(energyPerSecond.mul(diff));
+
+    //fusion
+    heliumPerSecond=maxDecimal(
+        AbsPow(
+            player.money
+            .dividedBy(AbsPow(player.fusion.unlockCost,0.5))
+            .dividedBy(maxDecimal(player.helium,new Decimal(1)))
+        ,0.5)
+        ,maxToleratedHeliumPerSecond).minus(maxToleratedHeliumPerSecond);
+    if(player.fusion.activated){
+        player.helium=player.helium.add(heliumPerSecond.mul(diff));
+    }
+    else if(player.upgrades.He[41].bought.greaterThan(0)){
+        player.helium=player.helium.mul(player.upgrades.He[41].value.pow(diff));
+    }
+    //helium upgrades
+    He["21"].value=GetMultFromEnergy().pow(0.5);
+    He["31"].value=player.money.abs().add(10).absLog10().pow(2);
+}
+function UpdateVariables(){
+    player.lastUpdate = Date.now();
+    playTime=(Date.now()-player.createdTime)/1000;
+}
+function InputLoop(){
+    player.inputValue.astroidPerAllocation=new Decimal(document.getElementById("astroid-per-allocation-input").value).floor();
+}
 function MainLoop(){
     let diff = (Date.now() - player.lastUpdate)/1000;
+    saveTimer+=diff;
+    if(saveTimer>=60){
+        save();
+        saveTimer=0;
+    }
     //console.log(diff+[]+lastUpdate);
-    productionLoop(diff);
+    InputLoop();
+    UpdateVariables();
+    ProductionLoop(diff);
     UpdateGUI();
-    player.lastUpdate = Date.now();
 }
-initGen();
-putText(1);
+window.addEventListener('keydown', function (e) {
+    if(e.key.toLowerCase()=='m'){
+        BuyMax();
+    }
+  }, false);
+InitHtml();
+InitGen();
+InitLoad();
+InitTab();
+InitNotify();
+InitSetInputValue();
+InitSettingsBasedOnDate();
 setInterval(MainLoop, 50);

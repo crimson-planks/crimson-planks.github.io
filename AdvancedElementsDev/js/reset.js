@@ -20,18 +20,17 @@ function getDefaultDimension(genID){
       }
     return generator;
 }
-function ResetDimension(genID,type="hydrogen"){
+function ResetDimension(genID,type="H"){
     player.generatorList[type][genID]=getDefaultDimension(genID);
 }
-function ResetDimensionRange(start,end,type="hydrogen"){
+function ResetDimensionRange(start,end,type="H"){
     for(let i=start;i<=end;i++){
         ResetDimension(i-1,type);
     }
 }
-
 function DimensionBoost(){
     CalMult();
-    if(GetIfBuyable(player.astroidCost,player.generatorList["hydrogen"][getDimboostRequiredGenID()-1].amount)){
+    if(GetIfBuyable(player.astroidCost,player.generatorList["H"][getDimboostRequiredGenID()-1].amount)){
         ResetDimensionRange(1,8);
         if(player.totalAstroids.lessThan(4)) player.currentMaxGenerator++;
         else{
@@ -42,6 +41,7 @@ function DimensionBoost(){
         player.money=player.defaultMoney;
         player.currentVisibleGenerators=1;
         player.energy.amount=new Decimal(0);
+        player.helium=player.defaultHelium;
         CalMult();
         PutText(1);
         return true;
@@ -49,4 +49,8 @@ function DimensionBoost(){
     else{
         return false;
     }
+}
+function ToggleActivateFusion(){
+    player.fusion.activated=!player.fusion.activated;
+    player.money=player.defaultMoney;
 }

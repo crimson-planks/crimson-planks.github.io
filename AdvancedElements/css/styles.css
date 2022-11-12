@@ -1,4 +1,5 @@
-*{
+body *{
+    font-family: "Courier New", monospace;
     font-size: 16px;
 }
 #loading-screen{
@@ -29,7 +30,7 @@
 }
 .unavailable-button{
     border: 1px solid #8d1a10;
-    background-color: #5f5b59;
+    background-color: #a88585;
 }
 .buyable-button{
     border: 1px solid #27a44f;
@@ -40,6 +41,10 @@
 }
 .buyable-button:hover{
     background-color: #27a44f;
+}
+.bought-button{
+    border: 1px solid #15498e ;
+    background-color: #405cff;
 }
 .reset-button{
     color:black;
@@ -53,4 +58,77 @@
 }
 .hidden{
     display: none;
+}
+.center{
+    margin: auto;
+}
+#extra-links{
+    font-size: 12px;
+    width: 100%;
+    bottom:20%;
+    right: 5%;
+    text-align:center;
+}
+#navigation-top{
+    font-size: 20px;
+    width: 100%;
+    top:10%;
+    text-align: center;
+}
+#navigation-bottom{
+    font-size: 20px;
+    position: fixed;
+    width: 100%;
+    bottom:5%;
+    text-align: center;
+}
+.op-button{
+    width:75px;
+    height: 35px;
+}
+.navigation-button{
+    min-width: 75px;
+    width: fit-content;
+    height: 25px;
+}
+.option-button{
+    width: 150px;
+    height: 50px;
+}
+#version-text{
+    position: fixed;
+    left:0%;
+    bottom:0%;
+}
+.notifyjs-bootstrap-blue{
+    border: 1px solid #2378af;
+    background-color: #459aef;
+}
+#floating-notation-tab{
+    margin: auto;
+    position: fixed;
+    width: 100%;
+    top:30%;
+    text-align: center;
+}
+.select-notation-button{
+    width: 200px;
+    height: 50px;
+}
+#fusion-tab{
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+.upgrade-button{
+    width: 200px;
+    height: 120px;
+    text-align: center;
+}
+.upgrade-description{
+    font-size: 10px;
+    text-align: center;
+}
+#floating-notation-table{
+    background-color: #ffffff;
 }

@@ -1,1 +1,0 @@
-var arrayOfTypes=[typeof(true), typeof(0), typeof(""), typeof(undefined)]

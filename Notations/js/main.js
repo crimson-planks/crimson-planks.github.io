@@ -4,7 +4,7 @@ player={
 function MainLoop(){
     let resultText="";
     let resultDecimal=new Decimal(document.getElementById("input-text").value);
-    resultText+=format(resultDecimal)
+    resultText+=FormatValue(resultDecimal)
     document.getElementById("output-text").innerHTML=resultText;
 }
 setInterval(MainLoop, 50);

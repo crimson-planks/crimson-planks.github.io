@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset+="UTF-8">
@@ -6,13 +7,18 @@
 	<link rel="stylesheet" href="css/styles.css">
 	<title>Advanced Elements</title>
 	<style>
-	body{
-		font-family: monospace;
-	}
+		body *{
+			font-family: "Courier New", monospace;
+			font-size: 13px;
+		}
 	</style>
 </head>
 <body>
-	<button id="get-money-button" onclick="clickButton()">Click to get 1 hydrogen</button>
+	<span id="version-text"></span>
+	<div id="extra-links">
+		<a href="./changelog">Changelog</a>
+	</div>
+	<button id="get-money-button" onclick="ClickButton()">Click to get 1 hydrogen</button>
 	<p class="text middle">
 		You have 
 		<span id="currency">0</span>
@@ -23,7 +29,12 @@
 		<span id="currency-per-second">0</span>
 		hydrogen per second.
 	</p>
-	<div id="generator-tab" class="tab">
+	<div id="navigation-top">
+		<button id="generator-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('generator-tab')">Generator</button>
+		<button id="energy-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('energy-tab')">Energy</button>
+		<button id="fusion-tab-button" class="hidden navigation-button buyable-button" onclick="ChangeTab('fusion-tab')">Fusion</button>
+	</div>
+	<div id="generator-tab" class="hidden tab">
 		<table>
 			<tr>
 				<td>
@@ -35,30 +46,114 @@
 					</div>
 				</td>
 				<td style="vertical-align: top;">
-					<div id="energy-div" class="hidden">
-						<button id="unlock-energy-button", class="unlock-button" onclick="unlockEnergy()">
+					<div id="unlock-div" class="hidden">
+						<button id="unlock-energy-button", class="unlock-button" onclick="UnlockEnergy()">
 							<span>Unlock Energy</span>
 							<span id="unlock-energy-description" class="description">Cost: 2 Hydrogen Astroids</span>
 						</button>
-						<span id="energy-main-div" class="hidden">
-							<button style="width: 150px; height: 50px;">asdf</button>
-							<button>sss</button>
-						</span>
+						<button id="unlock-fusion-button" class="unlock-button hidden" onclick="UnlockFusion()">
+							<span>Unlock Fusion</span>
+							<span id="unlock-fusion-description" class="description">Cost: 1e100 hydrogen</span>
+						</button>
 					</div>
 				</td>
 			</tr>
 		</table>
 	</div>
+	<div id="energy-tab" class="hidden">
+		<table><tr>
+			<td>
+				<p id="energy-text1">
+					0 Astroids are producing 0 energy per second.
+				</p>
+				<p id="energy-text2">
+					You have 0 energy, which is boosting all hydrogen generators by 1.00x.
+				</p>
+				<p id="energy-text3">
+					Allocatable Astroids: 0, Total Astroids: 0
+				</p>
+				<table>
+					<tr>
+						<td>
+							<button id="astroid-allocate-button1" onclick="AllocateAstroid(player.inputValue.astroidPerAllocation)">Allocate 1 Astroid</button>
+						</td>
+						<td>
+							<button id="astroid-allocate-button2" onclick="AllocateAstroid(player.inputValue.astroidPerAllocation.mul(-1))">Allocate -1 Astroids</button>
+						</td>
+					</tr>
+					<tr>
+						<td><input id="astroid-per-allocation-input" placeholder="0" type="text"></td>
+					</tr>
+					<tr>
+						<td><button id="astroid-accel-button" onclick="AstroidAccelation()">Astroid Accelation: gives 1.00x boost to energy production</button></td>
+					</tr>
+					<tr>
+						<td>
+							<p id="energy-text4">Energy Multiplier by Astroid Accelation: 1.00x</p>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td id="autobuyer-section">
+
+			</td>
+		</tr></table>
+	</div>
+	<div id="fusion-tab" class="hidden">
+		<button id="fuse-button" class="buyable-button" style="background-color: rgb(78, 128, 165); font-size:18px" onclick="ToggleActivateFusion()">Fuse Hydrogen</button><br>
+		<p id="fusion-text1">
+			You have 0 hydrogen and 0 helium, producing 0 helium per second.
+		</p>
+		<span style="font-size: 22px;">Upgrades</span>
+		<table id="helium-upgrade-table" class="middle" style="margin: auto;">
+		</table>
+	</div>
+	<div id="option-tab" class="hidden">
+		<table class="center" style="width:auto;">
+			<tr>
+				<td><button id="option-save-button" class="option-button buyable-button" onclick="save()">Save</button></td>
+				<td><button id="option-notation-button" class="option-button buyable-button" onclick="ToggleTab('floating-notation-tab')">Notation: N/A</button></td>
+			</tr>
+		</table>
+	</div>
+	<div id="floating-notation-tab" class="hidden">
+		<div style="width: fit-content; border: 2px solid; margin: auto;">
+			<table id="floating-notation-table">
+				<tbody id="floating-notation-tbody">
+
+				</tbody>
+			</table>
+			<button onclick="ToggleTab('floating-notation-tab')" class="buyable-button" style="margin: auto; height: 30px;">Close</button>
+		</div>
+	</div>
+	<div id="statistics-tab" class="hidden">
+		Temporary Statistics Text
+		<p style="font-weight: bold;">General</p>
+		<p id="statistics-general">
+
+		</p>
+	</div>
+	<div id="achievement-tab" class="hidden">
+		Temporary Achievement Text
+	</div>
+	<div id="navigation-bottom">
+		<button id="option-tab-button" class="navigation-button buyable-button" onclick="ChangeTab('option-tab')">Options</button>
+		<button id="statistics-tab-button" class="navigation-button buyable-button" onclick="ChangeTab('statistics-tab')">Statistics</button>
+		<button id="achievement-tab-button" class="navigation-button buyable-button" onclick="ChangeTab('achievement-tab')">Achievements</button>
+	</div>
 </body>
-<script src="js/jquery-3.6.1.min.js" type="text/javascript"></script>
-<script src="js/break_infinity.js"></script>
-<script src="notation/js/format.js"></script>
-<script src="js/type_list.js"></script>
-<script src="js/init.js"></script>
+<script src="js/lib/jquery-3.6.1.min.js" type="text/javascript"></script>
+<script src="js/lib/notify.min.js"></script>
+<script src="js/lib/break_eternity.min.js"></script>
+<script src="js/components/upgrade.js"></script>
+<script src="js/variables.js"></script>
 <script src="js/save.js"></script>
 <script src="js/buy.js"></script>
 <script src="js/multiplier.js"></script>
 <script src="js/reset.js"></script>
+<script src="notation/js/format.js"></script>
+<script src="js/update_gui.js"></script>
+<script src="js/devtools.js"></script>
 <script src="js/init.js"></script>
 <script src="js/main.js"></script>
 </html>
