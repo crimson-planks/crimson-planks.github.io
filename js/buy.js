@@ -9,11 +9,12 @@ function GetIfBuyable(cost,money=player.money){
         return false;
     }
 }
-function CostIncrease(Gnum,Gtype="hydrogen"){
+function CostIncrease(Gnum,Gtype="H"){
     let g=player.generatorList[Gtype][Gnum-1];
-    let CostDriftStartValue2=player.costDriftStartValue[0].mul(player.costDriftStartValue[1]);
+    let costDriftStartValue2=player.costDriftStartValue[0].mul(player.costDriftStartValue[1]);
+    let costDriftStartValue3=costDriftStartValue2.mul(player.costDriftStartValue[2])
     g.costMultDrift=g.costMult;
-        if(g.bought.greaterThan(player.costDriftStartValue[0])&&Gtype=="hydrogen"){
+        if(g.bought.greaterThan(player.costDriftStartValue[0])&&Gtype=="H"){
             g.costMultDrift=g.costMultDrift.mul(
                 g.costMult.pow(
                     g.bought.mul(
@@ -22,16 +23,19 @@ function CostIncrease(Gnum,Gtype="hydrogen"){
                         .minus(player.costDriftStartValue[0])
                         .pow(player.costDriftFactor)
                         .floor()));
-            if(g.bought.greaterThan(CostDriftStartValue2)){
+            if(g.bought.greaterThan(costDriftStartValue2)){
                 g.costMultDrift=g.costMultDrift.mul(
                     g.costMult.pow(
-                        g.bought.minus(CostDriftStartValue2)
+                        g.bought.minus(costDriftStartValue2)
                         .pow(player.costDriftFactor.mul(2))));
+                if(g.bought.greaterThan(costDriftStartValue3)){
+                    
+                }
             }
         }
     return g.costMultDrift;
 }
-function BuyGenerator(Gnum,Gtype="hydrogen",buyType="manual"){
+function BuyGenerator(Gnum,Gtype="H",buyType="manual"){
     if(player.currentVisibleGenerators<Gnum){
         return false;
     }
@@ -53,7 +57,7 @@ function BuyGenerator(Gnum,Gtype="hydrogen",buyType="manual"){
         return false;
     }
 }
-function BuyMultipleGenerators(Gnum,buyAmount=0,Gtype="hydrogen",buyMethod="manual"){
+function BuyMultipleGenerators(Gnum,buyAmount=0,Gtype="H",buyMethod="manual"){
     //buyAmount === 0 for buy max
     let i=0;
     if(buyAmount==0){
@@ -74,6 +78,7 @@ function UnlockEnergy(){
     if(GetIfBuyable(player.energy.unlockCost,player.astroidAmount)){
         player.generator.unlocked=true;
         player.energy.unlocked=true;
+        save();
     }
 }
 function AllocateAstroid(amount){
@@ -107,5 +112,53 @@ function AllocateAstroid(amount){
     }
 }
 function UnlockFusion(){
-    alert("Coming Soon(not true)!");
+    if(GetIfBuyable(player.fusion.unlockCost)){
+        player.fusion.unlocked=true;
+        save();
+    }
+}
+function BuyUpgrade(id,type="He"){
+    upgrade=player.upgrades[type][id];
+    //upgrade.bought may not be a boolean
+    if(upgrade.bought===true){
+        return;
+    }
+    if(type=="He"){
+        if(GetIfBuyable(upgrade.cost,player.helium)){
+            player.helium=player.helium.minus(upgrade.cost);
+            if(id==="11"){
+                upgrade.value=upgrade.value.mul("1.01");
+                upgrade.cost=upgrade.cost.mul(Decimal.pow(10,upgrade.bought.pow(0.5).add(1).floor()));
+                upgrade.bought=upgrade.bought.add(1);
+                return;
+            }
+            else if(id==="21"){
+                upgrade.bought=true;
+                return;
+            }
+            else if(id==="31"){
+                upgrade.bought=true;
+                return;
+            }
+            else if(id==="41"){
+                upgrade.value=upgrade.value.mul("0.90");
+                upgrade.cost=upgrade.cost.mul("1e5");
+                upgrade.bought=upgrade.bought.add(1);
+                return;
+            }
+        }
+    }
+}
+function GetEnergyMultFromAstroidAccel(){
+    return maxDecimal(player.energy.amount.dividedBy(
+        maxDecimal(new Decimal(1),player.energy.lastAccelEnergy)
+        ).pow(0.5),
+        new Decimal(1)
+    );
+}
+function AstroidAccelation(){
+    player.energy.multByAccel=player.energy.multByAccel.mul(GetEnergyMultFromAstroidAccel());
+    
+    player.energy.lastAccelEnergy=maxDecimal(player.energy.amount,player.energy.lastAccelEnergy);
+    player.energy.amount=new Decimal(player.energy.defaultEnergy);
 }

@@ -1,5 +1,21 @@
 //Warning: bugs, lots of bugs.
-function magAbs(amount){
+let clickerHeroesList=["K","M","B","T","q","Q","s","S","O","N","d","U","D","!","@","#","$","%","^","&","*","[","}","’","”","/","|",":",";","<",">",",",".","\\","?","~","±","a","A","á","Á","é","É","í","Í","ú","Ú","æ","Æ","Ø","¿","¶","ƒ","£","₣","₿","€","₲","h","H","j","J","p","P","w","₩","v","V","y","¥","¤","∑","®","†","¨","ı","π","ß","∂","©","λ","Ω","≈","ç","√","∫","™","‡","İ","∏","∆","Ç","◊","«","»","∧","∩","⊻","ñ","Ñ","C","Γ","∞","α","γ","δ","ε","ζ","θ","λ","ξ","τ","υ","φ","χ","ψ","Ξ","Φ","→","←","↑","↓","✪","+","-","×","÷","╳","♠","♥","♦","♣","Ⓐ","Ⓑ","Ⓒ","Ⓓ","Ⓔ","Ⓕ","Ⓖ","Ⓗ","Ⓘ","Ⓙ","Ⓚ","Ⓛ","Ⓜ","Ⓝ","Ⓞ","Ⓟ","Ⓠ","Ⓡ","Ⓢ","Ⓣ","Ⓤ","Ⓥ","Ⓦ","Ⓧ","Ⓨ","Ⓩ","⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹","⁺","⁻","⁼","⁽","⁾","∠","⦣","°","⟂","∥","∟","🄰","🄱","🄲","🄳","🄴","🄵","🄶","🄷","🄸","🄹","🄺","🄻","🄼","🄽","🄾","🄿","🅀","🅁","🅂","🅃","🅄","🅅","🅆","🅇","🅈","🅉"]
+let defaultNotationOption={ 
+    "general":{
+        dec:2,
+        smallDec:2,
+        maxBeforeNotate:3,
+        maxBeforeNegativePowerNotate: 2,
+        maxExp: new Decimal("1e9"),
+        maxNotatedLayer: 4,
+        customNegative: false,
+        customNegativeExp: false,
+        extraDigit: 0,
+    }
+}
+defaultNotationOption["letters"]={...defaultNotationOption["general"],};
+
+function MagAbs(amount){
     if(amount.equals(0)){
         return amount;
     }
@@ -15,86 +31,111 @@ function magAbs(amount){
         return amount.abs();
     }
 }
-function format(amount, property={}){
+function FormatLetters(amount,str,property){
     let tmpOption={...{notation: player.notation}, ...property};
-    let defaultOption={ 
-        "general":{
-            dec:2,
-            smallDec:2,
-            maxBeforeNotate:3,
-            maxExp: new Decimal("1e9"),
-            maxNotatedLayer: 4,
-            customNegative: false,
-            customNegativeExp: false,
-            notation: player.notation
-        }
-    }
     let optionName=tmpOption.notation;
-    if(defaultOption.optionName===undefined){
+    if(defaultNotationOption.optionName===undefined){
         optionName="general";
     }
-    //console.log(optionName,defaultOption["general"]+defaultOption[optionName]+(optionName==="general"))
-    let option={...(defaultOption[optionName]), ...property}
+    let option={...(defaultNotationOption[optionName]), ...property};
+    let power=amount.absLog10();
+    const len=str.length;
+    
+    if(amount.equals(0)) return new Decimal(0).toFixed(option.smallDec);
+    if(power.abs().lessThan(power.sign===-1 ? option.maxBeforeNegativePowerNotate : option.maxBeforeNotate)){
+        return amount.toFixed(option.smallDec);
+    }
+    if(MagAbs(amount).lessThan(new Decimal(new Decimal(10).pow(option.maxExp)))){
+        let intPower=power.floor();
+        return intPower.minus(intPower.dividedBy(len).floor().mul(len)); 
+    }
+    return "Format Error";
+}
+function FormatValue(amount, property={}){
+    if(property.notation===undefined){
+        property.notation=player.notation;
+    }
+    const tmpOption={...{notation: player.notation}, ...property};
+    let optionName=tmpOption.notation;
+    if(defaultNotationOption.optionName===undefined){
+        optionName="general";
+    }
+    //console.log(optionName,defaultNotationOption["general"]+[optionName]+(optionName==="general"))
+    let option={...(defaultNotationOption[optionName]), ...property}
 
-    //<code used by many formats>
+    //code used by many formats
+    if(typeof amount==='number'){
+        amount=new Decimal(amount);
+    }
     let eString="";
     let eCount=amount.layer-1;
     if(option.maxExp.lessThanOrEqualTo(Math.abs(amount.mag))){
         eCount++;
     }
-    console.log("eCount: "+eCount)
+    //console.log("eCount: "+eCount)
     if(eCount<=option.maxNotatedLayer) for(let i=0;i<eCount;i++) eString+="e";
-    let mNumber=new Decimal(404);
-    if(amount.layer-eCount>=0) mNumber=Decimal.fromComponents(amount.sign,amount.layer-eCount,amount.mag);
-
+    let mNumber=new Decimal("-42");
+    if(amount.layer-eCount>=0) mNumber=Decimal.fromComponents(amount.sign,0,amount.mag);
     if(!option.customNegative&&amount.sign===-1){
-        return "-"+format(amount.abs(),option);
+        return "-"+FormatValue(amount.abs(),option);
     }
-    //</code used by many formats>
-    console.log(mNumber);
-    if(option.notation==="scientific"){
-        if(magAbs(amount).lessThan(new Decimal(new Decimal(10).pow(option.maxExp)))){
-            let power=amount.absLog10().floor();
-            if(power.isNan()) return new Decimal(0).toFixed(option.smallDec);
-            if(magAbs(power).lessThan(option.maxBeforeNotate)) return amount.toFixed(option.smallDec);
-            let mantissa=amount.dividedBy(new Decimal("10").pow(power));
-            return `${mantissa.toFixed(option.dec)}e${power}`;
+    //console.log(mNumber);
+    
+    //notations with the same code beyond ee9
+    if(["scientific","engineering","engineering-alt","logarithm"].includes(option.notation)){
+
+        if(amount.equals(0)) return new Decimal(0).toFixed(option.smallDec);
+        let power=amount.absLog10();
+
+        //console.log(power)
+        //console.log((power.sign===-1)+[]+"a: "+(power.sign===-1 ? option.maxBeforeNegativePowerNotate : option.maxBeforeNotate)+[])
+        //console.log(MagAbs(power).lessThan(power.sign===-1 ? option.maxBeforeNegativePowerNotate : option.maxBeforeNotate))
+        if(power.abs().lessThan(power.sign===-1 ? option.maxBeforeNegativePowerNotate : option.maxBeforeNotate)){
+            return amount.toFixed(option.smallDec);
         }
-        else if(magAbs(amount).lessThan(Decimal.fromComponents(1,option.maxNotatedLayer+1,option.maxExp))){
-            console.log(mNumber);
-            return eString+format(mNumber,{...option, ...{dec:2}});
+
+        if(MagAbs(amount).lessThan(new Decimal(Decimal.pow(10,option.maxExp)))){
+            if(option.notation==="scientific"){
+                power=power.floor();
+                if(power.lessThan(0)){
+                    power=power.add(-1);
+                }
+                power=power.minus(option.extraDigit);
+                
+                let mantissa=amount.dividedBy(new Decimal("10").pow(power));
+                return `${mantissa.toFixed(option.dec)}e${power}`;
+            }
+            if(option.notation==="engineering"){
+                power=power.dividedBy(3).floor().mul(3);
+                if(power.lessThan(0)){
+                    power=power.add(-3);
+                }
+                power=power.minus(option.extraDigit);
+
+                let mantissa=amount.dividedBy(new Decimal("10").pow(power));
+                return `${mantissa.toFixed(option.dec)}e${power}`;
+            }
+            if(option.notation==="engineering-alt"){
+                power=power.floor();
+                let rpower=power;
+
+                power=power.add(power.sign===1 ? 2 : 0).dividedBy(3).floor().mul(3);
+                power=power.minus(option.extraDigit);
+
+                rpower=rpower.minus(power).toNumber();
+                let mantissa=amount.dividedBy(new Decimal("10").pow(power));
+                return `${mantissa.toFixed(option.dec-rpower+(power.sign===-1))}e${power}`;
+            }
+            if(option.notation==="logarithm"){
+                if(MagAbs(power).lessThan(option.maxBeforeNotate)) return amount.toFixed(option.smallDec);
+                return `e${power.toFixed(option.dec)}`
+            }
+        }
+        else if(MagAbs(amount).lessThan(Decimal.fromComponents(1,option.maxNotatedLayer,option.maxExp))){
+            return eString+FormatValue(mNumber,{...option, ...{dec:4}});
         }
         else{
-            return `(e^${format(new Decimal(eCount),{...option, ...{smallDec:0,dec:3,maxBeforeNotate:4}})})${format(mNumber,option)}`;
-        }
-    }
-    else if(option.notation==="engineering"){
-        if(magAbs(amount).lessThan(new Decimal(new Decimal(10).pow(option.maxExp)))){
-            let power=amount.absLog10().dividedBy(3).floor().mul(3);
-            if(power.isNan()) return new Decimal(0).toFixed(option.smallDec);
-            if(power.lessThan(option.maxBeforeNotate)) return amount.toFixed(option.smallDec);
-            let mantissa=amount.dividedBy(new Decimal("10").pow(power));
-            return `${mantissa.toFixed(option.dec)}e${power}`;
-        }
-        else if(magAbs(amount).lessThan(Decimal.fromComponents(1,option.maxNotatedLayer+1,option.maxExp))){
-            return eString+format(mNumber,{...option, ...{dec:2}});
-        }
-        else{
-            return `(e^${format(new Decimal(eCount),{...option, ...{smallDec:0,dec:3,maxBeforeNotate:4}})})${format(mNumber,option)}`;
-        }
-    }
-    else if(option.notation==="logarithm"){
-        if(magAbs(amount).lessThan(new Decimal(new Decimal(10).pow(option.maxExp)))){
-            let power=amount.absLog10();
-            if(power.isNan()) return new Decimal(0).toFixed(option.smallDec);
-            if(power.lessThan(option.maxBeforeNotate)) return amount.toFixed(option.smallDec);
-            return `e${power.toFixed(option.dec)}`
-        }
-        else if(magAbs(amount).lessThan(Decimal.fromComponents(1,option.maxNotatedLayer+1,option.maxExp))){
-            return eString+format(mNumber,{...option, ...{dec:2}});
-        }
-        else{
-            return `(e^${format(new Decimal(eCount),{...option, ...{smallDec:0,dec:3,maxBeforeNotate:4}})})${format(mNumber,option)}`;
+            return `(e^${FormatValue(new Decimal(eCount),{...option, ...{smallDec:0,dec:3,maxBeforeNotate:4}})})${FormatValue(mNumber,{...option, ...{dec:4}})}`;
         }
     }
     return "Format Error";
