@@ -1,0 +1,1 @@
+Math.cmp=function(a,b){return Math.sign(a-b)}

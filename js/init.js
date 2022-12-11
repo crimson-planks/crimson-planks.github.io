@@ -3,11 +3,11 @@ function InitHtml(){
     for(let i=0;i<MAX_GENERATOR;i++){
         tmp+=   `<tr id="genRow${i+1}" class="hidden">
                     <td>
-                        <span class="generator" id="gen${i+1}"></span>
+                        <span class="generator" id="gen${i}"></span>
                         <span></span>
                     </td>
                     <td>
-                        <button id="BG${i+1}" class="buy-button" type="button" onclick="BuyGenerator(${i+1})"></button>
+                        <button id="BG${i}" class="buy-button" type="button" onclick="BuyGenerator(${i})"></button>
                     </td>
                 </tr>`;
     }
@@ -36,7 +36,7 @@ function InitHtml(){
     //helium upgrades
     
     tmp="";
-    for(let i=0;i<4;i++){
+    for(let i=0;i<2;i++){
         tmp+="<tr>"
         for(let j=0;j<4;j++){
             tmp+=
@@ -54,7 +54,7 @@ function InitHtml(){
 }
 function InitGen(){
     for (let i = 0; i < MAX_GENERATOR; i++) {
-        let generator = getDefaultDimension(i);
+        let generator = Generator.getDefaultGenerator(["H",i]);
         player.generatorList["H"][i]=generator;
     }
 }

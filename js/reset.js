@@ -1,37 +1,26 @@
-function getDimboostRequiredGenID(){
-    if(player.totalAstroids.lessThan(4)){
-        requiredGenerator=player.totalAstroids.add(4);
+function getAstroidRequiredGenID(){
+    if(player.totalAstroids<4){
+        requiredGenerator=player.totalAstroids.toNumber()+3;
     }
     else{
-        requiredGenerator=8;
+        requiredGenerator=7;
     }
     return requiredGenerator;
 }
-function getDefaultDimension(genID){
-    let generator = {
-        cost: new Decimal("10").mul(new Decimal("10").pow(genID*genID)),
-        bought: new Decimal("0"),
-        amount: new Decimal("0"),
-        mult: new Decimal("1"),
-        multByDimB: new Decimal("1"),
-        totalMult: new Decimal("1"),
-        costMult: new Decimal("10"),
-        costMultDrift: new Decimal("10")
-      }
-    return generator;
+const ResetGenerator=function(id){
+    //console.log(id);
+    player.generatorList[id[0]][id[1]]=Generator.getDefaultGenerator(id)
 }
-function ResetDimension(genID,type="H"){
-    player.generatorList[type][genID]=getDefaultDimension(genID);
-}
-function ResetDimensionRange(start,end,type="H"){
+function ResetGeneratorRange(start,end,type="H"){
     for(let i=start;i<=end;i++){
-        ResetDimension(i-1,type);
+        ResetGenerator([type,i]);
     }
+    PutText(1);
 }
-function DimensionBoost(){
+function ObtainAstroid(){
     CalMult();
-    if(GetIfBuyable(player.astroidCost,player.generatorList["H"][getDimboostRequiredGenID()-1].amount)){
-        ResetDimensionRange(1,8);
+    if(GetIfBuyable(player.astroidCost,player.generatorList["H"][getAstroidRequiredGenID()].amount)){
+        ResetGeneratorRange(0,7);
         if(player.totalAstroids.lessThan(4)) player.currentMaxGenerator++;
         else{
             player.astroidCost=player.astroidCost.add(player.astroidCostIncrease);
@@ -53,4 +42,5 @@ function DimensionBoost(){
 function ToggleActivateFusion(){
     player.fusion.activated=!player.fusion.activated;
     player.money=player.defaultMoney;
+    ResetGeneratorRange(0,7);
 }

@@ -1,0 +1,40 @@
+<script>
+    let testArray=['', '·', ':', '∴', '∷', '⁙']
+    let rsltArr=[];
+    let rsltStr="[";
+    testArray.forEach(function(element){
+        let code=element.codePointAt(0);
+        const ucc= (code)=>`\\u${("0000"+code.toString(16)).slice(-4)}`;
+        let rslt='';
+        if(code<=0x7f){
+            const convertTable={
+                "\"":"\\\"",
+                "\'":"\\\'",
+            }
+            rslt=element;
+            if(Object.keys(convertTable).includes(element)){
+                rslt=convertTable[rslt]
+            }
+        }
+        else if(code<=0xff){
+            rslt=`\\x${code.toString(16)}`
+        }
+        else if(code<=0xffff){
+            rslt=ucc(code);
+        }
+        else{
+            for(let i=0;i<element.length;i++){
+                rslt+=ucc(element.charCodeAt(i));
+            }
+        }
+        rsltArr=rsltArr.concat(rslt);
+        console.log(rslt);
+        //console.log(element.codePointAt(0).toString(16));
+        //if(element.length>1) console.log(element);
+    });
+    rsltArr.forEach(function(element){
+        rsltStr+=`"${element}",`
+    });
+    rsltStr+="]";
+    console.log(rsltStr);
+</script>
