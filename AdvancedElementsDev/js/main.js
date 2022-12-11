@@ -1,9 +1,8 @@
-const MAX_GENERATOR = 9;
-
-const amountOfGenerators = 8
+var amountOfGenerators = 8
 
 function ClickButton(){
     player.money = player.money.plus(player.clickMult);
+    player.totalHydrogen= player.totalHydrogen.plus(player.clickMult);
     player.clickAmount=player.clickAmount.add(1);
 }
 
@@ -12,19 +11,24 @@ function ProductionLoop(diff){
     ({totalAstroids,generatorList,energy}=player);
     ({astroidsAllocated}=player.energy);
     ({He}=player.upgrades)
-    currencyPerSecond=generatorList["H"][0].amount.mul(generatorList["H"][0].totalMult);
-    if(player.fusion.activated){
-        currencyPerSecond=currencyPerSecond.pow(0.5);
-        player.money=player.money.mul(player.fusion.hydrogenLoseRate.pow(player.money.abs().add(1).absLog10().pow(player.fusion.hydrogenLoseDriftFactor)).pow(diff));
-    }
+    currencyPerSecond=generatorList["H"][0].amount.mul(generatorList["H"][0].mult);
     moneyAdd=currencyPerSecond.mul(new Decimal(diff));
+    if(player.fusion.activated){
+        player.money=GetFusedAmount(player.money,diff);
+    }
     player.money=player.money.plus(moneyAdd);
     player.totalHydrogen=player.totalHydrogen.plus(moneyAdd);
     CalEnergyMult();
     CalMult();
-    for(let i=1;i<player.amountOfGenerators;i++){
+    for(let i=1;i<player.currentVisibleGenerators;i++){
+        let gAmount;
         g=generatorList["H"][i-1];
-        g.amount=g.amount.plus(generatorList["H"][i].amount.mul(generatorList["H"][i].totalMult).mul(diff));
+        
+        gAmount=g.amount.plus(generatorList["H"][i].amount.mul(generatorList["H"][i].mult).mul(diff));
+        if(player.fusion.activated&&generatorList["H"][i].amount.gt(1)){
+            gAmount=GetFusedAmount(gAmount,diff);
+        }
+        g.amount=gAmount;
     }
     player.clickMult=new Decimal("2").pow(player.astroidAmount);
     //energy
@@ -34,22 +38,26 @@ function ProductionLoop(diff){
     energy.amount=energy.amount.add(energyPerSecond.mul(diff));
 
     //fusion
-    heliumPerSecond=maxDecimal(
-        AbsPow(
-            player.money
-            .dividedBy(AbsPow(player.fusion.unlockCost,0.5))
-            .dividedBy(maxDecimal(player.helium,new Decimal(1)))
-        ,0.5)
-        ,maxToleratedHeliumPerSecond).minus(maxToleratedHeliumPerSecond);
+    player.fusion.productionCap=player.energy.amount
+        .mul(player.upgrades.He[14].bought.gt(0) ? player.upgrades.He[14].value : 1)
+        .mul(player.upgrades.He[21].bought.gt(0) ? player.upgrades.He[21].value : 1)
+    heliumPerSecond=Decimal.min(
+        Decimal.max(
+            AbsPow(
+                player.money
+                .div(player.fusion.unlockCost)
+                ,0.125)
+            .minus(maxToleratedHeliumPerSecond),maxToleratedHeliumPerSecond),player.fusion.productionCap);
     if(player.fusion.activated){
         player.helium=player.helium.add(heliumPerSecond.mul(diff));
     }
-    else if(player.upgrades.He[41].bought.greaterThan(0)){
-        player.helium=player.helium.mul(player.upgrades.He[41].value.pow(diff));
-    }
     //helium upgrades
-    He["21"].value=GetMultFromEnergy().pow(0.5);
-    He["31"].value=player.money.abs().add(10).absLog10().pow(2);
+    He["12"].value=GetMultFromEnergy().absLog10().add(1);
+    He["13"].value=player.money.abs().add(1).absLog10().pow(Decimal.pow(1.125,He["13"].bought));
+    He["21"].value=player.helium.abs().add(1).absLog10().pow(3).pow(He["21"].bought).add(1);
+    He["22"].value=player.helium.abs().add(1).absLog10().add(1);
+    He["24"].value=He["24"].bought.add(1);
+    player.maxAstroidBoostGenerator=He["24"].value;
 }
 function UpdateVariables(){
     player.lastUpdate = Date.now();

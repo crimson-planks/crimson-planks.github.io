@@ -39,6 +39,7 @@ function ChangeTab(tabName="generator-tab",sudo=false){
     }
     ShowIfBoolean(document.getElementById(selectedTab),false);
     ShowIfBoolean(document.getElementById(tabName),true);
+    ShowIfBoolean(document.getElementById("floating-notation-tab"),false);
     selectedTab=tabName;
     return tabName;
 }
@@ -46,31 +47,34 @@ function ChangeNotation(notation){
     player.notation=notation;
 }
 function UpdateGUI(){
-    let tmpstring;
-    document.getElementById("currency").innerHTML=FormatValue(player.money);
+    let tmpstring="";
+    document.getElementById("hydrogen").innerHTML=FormatValue(player.money);
     document.getElementById("get-money-button").innerHTML=`Click to get ${FormatValue(player.clickMult,{dec: 2, smallDec: 0})} hydrogen`;
-    document.getElementById("currency-per-second").innerHTML=FormatValue(currencyPerSecond);
-
-    tmpstring=player.totalAstroids+[];
-    if(player.astroidAmount.lessThan(player.totalAstroids)){
-        tmpstring+=" - "+player.totalAstroids.minus(player.astroidAmount);
+    document.getElementById("hydrogen-per-second").innerHTML=FormatValue(currencyPerSecond);
+    ShowIfBoolean(document.getElementById("fused-lost-hydrogen-text"),player.fusion.activated)
+    if(player.fusion.activated){
+        document.getElementById("fused-lost-hydrogen").innerHTML=FormatValue(GetFusedLoseRate(player.money));
     }
-    document.getElementById("dimB-text").innerHTML=`Hydrogen Astroids(${tmpstring}): requires ${FormatValue(player.astroidCost,{smallDec: 0})} Hydrogen Generator-${getDimboostRequiredGenID()}s`;
+    tmpstring=player.totalAstroids.toString();
+    if(player.astroidAmount.lessThan(player.totalAstroids)){
+        tmpstring+=" - "+player.totalAstroids.minus(player.astroidAmount).toString();
+    }
+    document.getElementById("dimB-text").innerHTML=`Hydrogen Astroids(${tmpstring}): requires ${FormatValue(player.astroidCost,{smallDec: 0})} Hydrogen Generator-${RomanNumeralsUnit(getAstroidRequiredGenID()+1)}s`;
     document.getElementById("dimB-button").innerHTML= player.totalAstroids.greaterThanOrEqualTo(4) ? "Reset for a boost" : "Reset for a new generator"
 
     for(let i=0;i<player.amountOfGenerators;i++){
         let g=player.generatorList["H"][i];
-        document.getElementById("gen"+(i+1)).innerHTML="Hydrogen Generator-"+(i+1)+"<br> Amount: " + FormatValue(g.amount)+"("+FormatValue(g.bought,{smallDec: 0})+") x"+FormatValue(g.totalMult);
+        document.getElementById("gen"+(i)).innerHTML="Hydrogen Generator-"+(RomanNumeralsUnit(i+1))+"<br> Amount: " + FormatValue(g.amount)+"("+FormatValue(g.bought,{smallDec: 0})+") x"+FormatValue(g.mult);
 
         ChangeColorIfBuyable(
-            document.getElementById("BG"+(i+1)),
+            document.getElementById("BG"+(i)),
             player.generatorList["H"][i].cost);
-        document.getElementById("BG"+(i+1)).innerHTML="Cost: " + FormatValue(player.generatorList["H"][i].cost,{dec: 0, smallDec: 0});
+        document.getElementById("BG"+(i)).innerHTML="Cost: " + FormatValue(player.generatorList["H"][i].cost,{dec: 0, smallDec: 0});
     }
     ChangeColorIfBuyable(
         document.getElementById("dimB-button"),
         
-        player.astroidCost,player.generatorList["H"][getDimboostRequiredGenID()-1].amount);
+        player.astroidCost,player.generatorList["H"][getAstroidRequiredGenID()].amount);
         
     ShowIfBoolean(
         document.getElementById("unlock-div"),
@@ -91,7 +95,7 @@ function UpdateGUI(){
     }
     //energy
     document.getElementById("energy-text1").innerHTML=`${FormatValue(player.energy.astroidsAllocated,{smallDec: 0})} Astroids are producing ${FormatValue(energyPerSecond)} energy per second. (${FormatValue(player.energy.mult)} energy per astroid)`
-    document.getElementById("energy-text2").innerHTML=`You have ${FormatValue(player.energy.amount)} energy, which is boosting all hydrogen generators by ${FormatValue(GetMultFromEnergy())}x.`
+    document.getElementById("energy-text2").innerHTML=`You have ${FormatValue(player.energy.amount)} energy, which is boosting all hydrogen generators by x${FormatValue(GetMultFromEnergy())}.`
     document.getElementById("energy-text3").innerHTML=`Allocatable Astroids: ${FormatValue(allocatableAstroids,{smallDec: 0})}, Total Astroids: ${FormatValue(player.totalAstroids,{smallDec: 0})}`
 
     document.getElementById("astroid-allocate-button1").innerHTML=`Allocate ${FormatValue(player.inputValue.astroidPerAllocation,{smallDec: 0})} Astroids`;
@@ -100,15 +104,16 @@ function UpdateGUI(){
 
     document.getElementById("energy-text4").innerHTML=`Energy Multiplier by Astroid Accelation: ${FormatValue(player.energy.multByAccel)}x`
     //fusion
-    ShowIfBoolean(document.getElementById("unlock-fusion-button"),(!player.fusion.unlocked)&&GetIfBuyable(fusionShowCost));
+    ShowIfBoolean(document.getElementById("unlock-fusion-button"),(!player.fusion.unlocked)&&GetIfBuyable(player.fusion.showCost));
     ChangeColorIfBuyable(document.getElementById("unlock-fusion-button"),player.fusion.unlockCost);
 
     document.getElementById("fuse-button").innerHTML=player.fusion.activated ? "Stop fusing hydrogen" : "Fuse hydrogen";
-    tmpstring=`You have ${FormatValue(player.money)} hydrogen and ${FormatValue(player.helium)} helium, producing ${FormatValue(heliumPerSecond)} helium per second.`;
+    tmpstring=`You have ${FormatValue(player.money)} hydrogen, producing ${FormatValue(heliumPerSecond)} helium per second.(Capped at ${FormatValue(player.fusion.productionCap)}/s)`;
     if(!player.fusion.activated){
         tmpstring=`<span style="text-decoration: line-through;">${tmpstring}</span>`
     }
     document.getElementById("fusion-text1").innerHTML=tmpstring;
+    document.getElementById("helium").innerHTML=FormatValue(player.helium);
 
     //unlock description
     document.getElementById("unlock-energy-description").innerHTML=`Cost: ${FormatValue(player.energy.unlockCost,{smallDec:0})} Hydrogen Astroids`
@@ -116,20 +121,25 @@ function UpdateGUI(){
 
     //helium upgrades
 
-    document.getElementById("he-11-description").innerHTML=`Each allocated astroid boosts energy per second.<br>(Currently: ${FormatValue(player.upgrades.He["11"].value)}x)`;
-    document.getElementById("he-21-description").innerHTML=`Unallocated astroids boost hydrogen generators based on unspent energy<br>(${FormatValue(player.upgrades.He["21"].value)}x)`;
-    document.getElementById("he-31-description").innerHTML=`Energy production gets a boost based on amount of hydrogen.<br>(${FormatValue(player.upgrades.He["31"].value)}x)`
-    document.getElementById("he-41-description").innerHTML=`Helium slowly decay when not fusing<br>(${FormatValue(player.upgrades.He["41"].value)}x/s)`
-    for(let i=0;i<4;i++){
+    document.getElementById("he-11-description").innerHTML=`Each allocated astroid boosts energy per second.<br>(Currently: x${FormatValue(player.upgrades.He[11].value)})`;
+    document.getElementById("he-12-description").innerHTML=`Unallocated astroids boost hydrogen generators based on unspent energy<br>(x${FormatValue(player.upgrades.He[12].value)})`;
+    document.getElementById("he-13-description").innerHTML=`Energy production gets a boost based on amount of hydrogen.<br>(x${FormatValue(player.upgrades.He[13].value)})`
+    document.getElementById("he-14-description").innerHTML=`Increase the cap of helium production<br>(x${FormatValue(player.upgrades.He[14].value)})`
+    document.getElementById("he-21-description").innerHTML=`Increase the cap of helium production based on amount of helium<br>(x${FormatValue(player.upgrades.He[21].value)})`
+    document.getElementById("he-22-description").innerHTML=`Hydrogen production gets a boost based on amount of helium<br>(x${FormatValue(player.upgrades.He[22].value)})`
+    document.getElementById("he-24-description").innerHTML=`Unallocated astroids boost Hydrogen Generator-${RomanNumeralsUnit(player.upgrades.He[24].value)}`
+    for(let i=0;i<2;i++){
         for(let j=0;j<4;j++){
-            if(player.upgrades.He[i+1+[]+(j+1)]===undefined) continue;
-            if(player.upgrades.He[i+1+[]+(j+1)].bought===true){
-                document.getElementById(`he-${i+1+[]+(j+1)}-button`).classList.remove('buyable-button');
-                document.getElementById(`he-${i+1+[]+(j+1)}-button`).classList.add('bought-button');
+            let id=i+1+""+(j+1)
+            if(player.upgrades.He[id]===undefined) continue;
+            if(player.upgrades.He[id].bought.gte(player.upgrades.He[id].type[1])){
+                document.getElementById(`he-${id}-button`).classList.remove('buyable-button');
+                document.getElementById(`he-${id}-button`).classList.add('bought-button');
+                document.getElementById(`he-${id}-cost`).innerHTML=`MAXED(${player.upgrades.He[id].type[1]})`;
                 continue;
             }
-            ChangeColorIfBuyable(document.getElementById(`he-${i+1+[]+(j+1)}-button`),player.upgrades.He[i+1+[]+(j+1)].cost,player.helium)
-            document.getElementById(`he-${i+1+[]+(j+1)}-cost`).innerHTML=`Cost: ${FormatValue(player.upgrades.He[i+1+[]+(j+1)].cost)}`
+            ChangeColorIfBuyable(document.getElementById(`he-${id}-button`),player.upgrades.He[id].cost,player.helium)
+            document.getElementById(`he-${id}-cost`).innerHTML=`Cost: ${FormatValue(player.upgrades.He[id].cost)}`
         }
     }
     //option
@@ -142,6 +152,6 @@ function UpdateGUI(){
     if(selectedTab==="statistics-tab"){
         document.getElementById("statistics-general").innerHTML=
         `You have made a total of ${FormatValue(player.totalHydrogen)} hydrogen.<br>
-        You have played for ${playTime}`
+        You have played for ${FormatTime(playTime)}.<br>`
     }
 }
