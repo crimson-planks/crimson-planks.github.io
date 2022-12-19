@@ -15,35 +15,40 @@ function AbsPow(amount,power){
 function GetMultFromEnergy(){
     ({amount}=player.energy)
     if(amount.eq(0)) return new Decimal(1);
-    return maxDecimal(
+    let rslt=maxDecimal(
         amount.pow(amount.absLog10().absLog10()), amount.log10().add(2)).add(1);
+    if(player.upgrades[1]["21"].bought.gt(0)) rslt=rslt.mul(player.upgrades[1]["21"].value)
+    return rslt;
 }
 function getMultFromBuy(genID){
-    return Decimal.pow(2,player.generatorList.H[genID].bought);
+    return Decimal.pow(2,player.generatorList[genID[0]][genID[1]].bought);
 }
 function CalMult(){
     let energyMult=GetMultFromEnergy();
     for(let i=0;i<MAX_GENERATOR;i++){
-        g=player.generatorList["H"][i];
+        g=player.generatorList[0][i];
         let tmp=new Decimal(1)
         if(i<player.maxAstroidBoostGenerator){
             tmp=new Decimal("2").pow(player.astroidAmount)
-            if(player.upgrades.He[12].bought.gt(0)) tmp=tmp.mul(player.upgrades.He[12].value.pow(allocatableAstroids));
-            if(i===0&&player.upgrades.He[22].bought.gt(0)){
-                tmp=tmp.mul(player.upgrades.He[22].value);
+            if(player.upgrades[1][12].bought.gt(0)) tmp=tmp.mul(player.upgrades[1][12].value.pow(allocatableAstroids));
+            if(i===0&&player.upgrades[1][22].bought.gt(0)){
+                tmp=tmp.mul(player.upgrades[1][22].value);
             }
         }
 
-        g.mult=new Decimal("0.5").pow(i).mul(tmp).mul(getMultFromBuy(i)).mul(energyMult);
+        g.mult=new Decimal("0.5").pow(i).mul(tmp).mul(getMultFromBuy([0,i])).mul(energyMult);
     }
 }
 function CalEnergyMult(){
     let tmp=player.energy.multByAccel;
-    if(player.upgrades.He[11].bought.gt(0)){
-        tmp=tmp.mul((player.upgrades.He[11].value.pow(player.energy.astroidsAllocated)));
+    if(player.upgrades[1][11].bought.gt(0)){
+        tmp=tmp.mul((player.upgrades[1][11].value.pow(player.energy.astroidsAllocated)));
     }
-    if(player.upgrades.He[13].bought.gte(player.upgrades.He[13].type[1])){
-        tmp=tmp.mul(player.upgrades.He[13].value);
+    if(player.upgrades[1][13].bought.gt(0)){
+        tmp=tmp.mul(player.upgrades[1][13].value);
+    }
+    if(player.upgrades[1][23].bought.gt(0)){
+        tmp=tmp.mul(player.upgrades[1][23].value);
     }
     player.energy.mult=tmp
 }

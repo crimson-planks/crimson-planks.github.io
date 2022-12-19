@@ -7,7 +7,7 @@ class Upgrade{
         if(type.length===1){
             type=type.concat(Decimal.dInf);
         }
-        if(typeof type[1]===typeof 0){
+        if(typeof type[1]==="number"){
             type[1]=new Decimal(type[1]);
         }
         if(defaultValue===undefined){
@@ -34,30 +34,32 @@ class Upgrade{
         this.bought=new Decimal(0);
     }
     buyOnce(){
-        //this.bought might not be a boolean
         if(this.bought.gte(this.type[1])){
             return;
         }
         
-        if(this.id[0]==="He"){
+        if(this.id[0]===1){
             if(GetIfBuyable(this.cost,player.helium)){
                 player.helium=player.helium.minus(this.cost);
                 this.bought=this.bought.add(1);
                 if(this.id[1]==="11"){
-                    this.value=this.value.mul("1.01");
                     this.cost=this.cost.mul(10);
                     return;
                 }
                 else if(this.id[1]==="13"){
-                    this.cost=this.cost.mul("1e20")
+                    this.cost=this.cost.mul("1e10")
                 }
                 else if(this.id[1]==="14"){
-                    this.value=this.value.mul("2");
-                    this.cost=this.cost.mul("10");
-                    return;
+                    this.cost=this.cost.mul(10);
                 }
                 else if(this.id[1]==="21"){
-                    this.cost=this.cost.mul("1e10");
+                    this.cost=this.cost.mul("1e3");
+                }
+                else if(this.id[1]==="22"){
+                    this.cost=this.cost.mul("1e50");
+                }
+                else if(this.id[1]==="23"){
+                    this.cost=this.cost.mul("1e5");
                 }
                 else if(this.id[1]==="24"){
                     this.cost=this.cost.mul("1e12");

@@ -7,7 +7,7 @@ function InitHtml(){
                         <span></span>
                     </td>
                     <td>
-                        <button id="BG${i}" class="buy-button" type="button" onclick="BuyGenerator(${i})"></button>
+                        <button id="BG${i}" class="buy-button" type="button" onclick="BuyGenerator([0,${i}])"></button>
                     </td>
                 </tr>`;
     }
@@ -41,7 +41,7 @@ function InitHtml(){
         for(let j=0;j<4;j++){
             tmp+=
             `<td>
-                <button id="he-${i+1+[]+(j+1)}-button" class="upgrade-button" onclick="BuyUpgrade('${i+1+[]+(j+1)}','He')">
+                <button id="he-${i+1+[]+(j+1)}-button" class="upgrade-button" onclick="BuyUpgrade([1,'${i+1+[]+(j+1)}'])">
                     <span id="he-${i+1+[]+(j+1)}-description" class="upgrade-description"></span>
                     <br>
                     <span id="he-${i+1+[]+(j+1)}-cost" style="font-size: 13px;"></span>
@@ -54,8 +54,8 @@ function InitHtml(){
 }
 function InitGen(){
     for (let i = 0; i < MAX_GENERATOR; i++) {
-        let generator = Generator.getDefaultGenerator(["H",i]);
-        player.generatorList["H"][i]=generator;
+        let generator = Generator.getDefaultGenerator([0,i]);
+        player.generatorList[0][i]=generator;
     }
 }
 function InitTab(){
@@ -85,9 +85,6 @@ function InitSettingsBasedOnDate(){
     let todayDate=new Date();
     if(todayDate.getMonth()===(4-1)&&todayDate.getdate()===1){
         console.log("April Fools!");
-    }
-    else if(todayDate.getMonth()===(10-1)){
-        console.log("ttest sstring");
     }
 }
 /*

@@ -5,13 +5,13 @@ const SMALL_INFINITY = new Decimal(Number.MAX_VALUE);
 //max value with break_infinity.js
 const MEDIUM_INFINITY= new Decimal("e9e15");
 //new Decimal("10").pow(15).mul(9)
-var currentVersion = "v0.00210-dev";
+var currentVersion = "v0.00220-dev";
 var notationOption={
     
 }
 var player = {
     money: new Decimal("0"),
-    generatorList: {"H":[undefined]},
+    generatorList: {0:[undefined]},
     notation: "scientific",
     createdVersion: currentVersion,
     amountOfGenerators: 0,
@@ -55,8 +55,7 @@ var player = {
         unlockCost: new Decimal("1e90"),
         activated: false,
         loseRate: new Decimal("0.9"),
-        loseDriftFactor: new Decimal("0.8"),
-        productionCap: new Decimal(0)
+        loseDriftFactor: new Decimal("0.8")
     },
     helium: new Decimal(0),
     defaultHelium: new Decimal(0),
@@ -64,14 +63,15 @@ var player = {
         astroidPerAllocation: new Decimal("1")
     },
     upgrades: {
-        "He":{
-            "11":new Upgrade([0],["He","11"],new Decimal('10')),
-            "12":new Upgrade([1,1],["He","12"],new Decimal('10000')),
-            "13":new Upgrade([1,10],["He","13"],new Decimal('1e6')),
-            "14":new Upgrade([0],["He","14"],new Decimal('1e18')),
-            "21":new Upgrade([1,5],["He","21"],new Decimal('1e15')),
-            "22":new Upgrade([1,1],["He","22"],new Decimal('1e15')),
-            "24":new Upgrade([1,7],["He","21"],new Decimal('1e50'))
+        1:{
+            "11":new Upgrade([1,100],[1,"11"],new Decimal('10')),
+            "12":new Upgrade([1,1],[1,"12"],new Decimal('10000')),
+            "13":new Upgrade([1,10],[1,"13"],new Decimal('1e6')),
+            "14":new Upgrade([0],[1,"14"],new Decimal('1e9')),
+            "21":new Upgrade([0],[1,"21"],new Decimal('1e11')),
+            "22":new Upgrade([1,3],[1,"22"],new Decimal('1e15')),
+            "23":new Upgrade([0],[1,"23"],new Decimal('1e35')),
+            "24":new Upgrade([1,7],[1,"24"],new Decimal('1e50'))
         }
     }
 }
