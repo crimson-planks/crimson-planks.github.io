@@ -10,9 +10,11 @@ dev.inequalityFunc=function(len,base){
         "0":"0",
         "1":"1"
     }
-    let arr=[]
+    let arr=Array(len)
     let rsltarr=[]
-    while(arr.length<len) arr=arr.concat(0);
+    for(let i=0;i<len;i++){
+        arr[i]=0;
+    }
     while(true){
         arr.forEach(function(value,index){
             if(index===len-1) return;
@@ -67,4 +69,11 @@ dev.compareECount=function(array){
         //console.log(`former: ${a} latest: ${b}`)
     });
     return {correct: array.length-wrongcount,wrong: wrongcount}
+}
+dev.addEventListener=function(key,func){
+    window.addEventListener('keydown', function (e) {
+        if(e.key.toLowerCase()==key){
+            func();
+        }
+      }, false);
 }

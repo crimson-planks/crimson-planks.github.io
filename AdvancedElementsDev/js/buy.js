@@ -9,30 +9,30 @@ function GetIfBuyable(cost,money=player.money){
         return false;
     }
 }
-function CostIncrease(genID,Gtype="H"){
+function CostIncrease(genID){
     ({costDriftFactor,costDriftStartValue}=player)
-    let g=player.generatorList[Gtype][genID];
+    let g=player.generatorList[genID[0]][genID[1]];
     
     g.costMultDrift=g.costMult;
-        if(g.bought.gt(costDriftStartValue[0])&&Gtype=="H"){
+        if(g.bought.gt(costDriftStartValue[0])&&genID[0]==0){
             g.costMultDrift=g.costMultDrift.mul(g.costMult.pow(g.bought.minus(costDriftStartValue[0]).mul(genID+1).pow(costDriftFactor).floor()))
         }
     return g.costMultDrift;
 }
-function BuyGenerator(genID,Gtype="H",buyType="manual"){
+function BuyGenerator(genID,buyType="manual"){
     if(player.currentVisibleGenerators<genID){
         return false;
     }
-    let g=player.generatorList[Gtype][genID];
+    let g=player.generatorList[genID[0]][genID[1]];
     if(GetIfBuyable(g.cost)){
         g.bought=g.bought.plus(1);
         g.amount=g.amount.plus(1);
         player.money=player.money.minus(g.cost);
-        g.costMultDrift=CostIncrease(genID,Gtype);
+        g.costMultDrift=CostIncrease(genID);
         g.cost=g.cost.mul(g.costMultDrift);
         //g.mult=g.mult.mul(2);
-        if(player.amountOfGenerators===genID+1 && player.amountOfGenerators<player.currentMaxGenerator){
-            player.currentVisibleGenerators=genID+2;
+        if(player.amountOfGenerators===genID[1]+1 && player.amountOfGenerators<player.currentMaxGenerator){
+            player.currentVisibleGenerators=genID[1]+2;
             PutText(player.currentVisibleGenerators);
         }
         return true;
@@ -41,21 +41,21 @@ function BuyGenerator(genID,Gtype="H",buyType="manual"){
         return false;
     }
 }
-function BuyMultipleGenerators(genID,buyAmount=0,Gtype="H",buyMethod="manual"){
+function BuyMultipleGenerators(genID,buyAmount=0,buyMethod="manual"){
     //buyAmount === 0 for buy max
     let i=0;
     if(buyAmount==0){
-        while(BuyGenerator(genID,Gtype,buyMethod)) i++;
+        while(BuyGenerator(genID,buyMethod)) i++;
         return i;
     }
     for(;i<buyAmount;i++){
-        if(!BuyGenerator(genID,Gtype,buyMethod)) break;
+        if(!BuyGenerator(genID,buyMethod)) break;
     }
     return i;
 }
 function BuyMax(){
     for(let i=0;i<player.currentVisibleGenerators;i++){
-        BuyMultipleGenerators(i);
+        BuyMultipleGenerators([0,i]);
     }
 }
 function UnlockEnergy(){
@@ -101,8 +101,8 @@ function UnlockFusion(){
         save();
     }
 }
-function BuyUpgrade(id,type="He"){
-    upgrade=player.upgrades[type][id];
+function BuyUpgrade(id){
+    upgrade=player.upgrades[id[0]][id[1]];
     upgrade.buyOnce();
 }
 function GetEnergyMultFromAstroidAccel(){
