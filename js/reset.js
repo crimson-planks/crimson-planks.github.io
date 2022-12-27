@@ -54,7 +54,10 @@ function ObtainAstroid(){
         reset(0);
     }
 }
-function ToggleActivateFusion(){
+function ToggleActivateFusion(sudo=false){
+    if(!sudo){
+        if(!window.confirm("Are you sure to reset your hydrogen generators to toggle fusion?")) return;
+    }
     player.fusion.activated=!player.fusion.activated;
     player.money=player.defaultMoney;
     ResetGeneratorRange(0,7);

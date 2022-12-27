@@ -22,7 +22,7 @@ function calEcountAndMnumber(amount,base=10,powMaxExp=new Decimal(1e9)){
     }
     powMaxExp=new Decimal(powMaxExp);
 
-    if(base!==Math.floor(base)) throw Error("base must be an integer");
+    if(base!==Math.floor(base)) throw RangeError("base must be an integer");
     if(base<2) throw RangeError("base must be greater than or equal to 2");
     
     let eCount=-1;
@@ -81,7 +81,7 @@ function ConsecutiveCharacter(chr,n){
 }
 function ArrToInequality(arr){
     //console.log(arr);
-    if(typeof arr===typeof ""){
+    if(typeof arr==="string"){
         arr=arr.split('');
         arr=arr.map(value=>+value)
     }
@@ -91,8 +91,32 @@ function ArrToInequality(arr){
     });
     return rsltarr;
 }
+function calLetterBracketCount(n,strLen,property){
+    n=new Decimal(n);
+    let option=GetOption(property);
+    let bracketCount=0;
+    let skippedAmount=Decimal.dInf;
+    while(n.absLog10().lt(powMaxExp)){
+        const getRsltLen= (x,m) => Decimal.log(Decimal.minus(m,1).mul(x).plus(1),m);
+        skippedAmount=getRsltLen(n,strLen).floor().minus(option.show);
+        ({eCount,mNumber}=calEcountAndMnumber(skippedAmount,strLen,option.powMaxExp));
+        n=skippedAmount;
 
+        let power=n.abs().log(option.base).abs().div(3).floor().mul(3).mul(power.sign);
+        if(power.lte(0)) power=power.add(-3);
+        let letterId=power.div(3).floor();
+        n=letterId;
+        bracketCount++;
+    }
+    return bracketCount;
+}
 function FormatLetter(n,str,property){
+    function print(){
+        return;
+        console.log("n: "+n);
+        console.log("skippedAmount: "+skippedAmount);
+        console.log("eCount:"+eCount);
+    }
     ({notationOption}=player)
     if(Object.keys(n)!==Object.keys(new Decimal())) n=new Decimal(n);
     if(str===undefined){
@@ -109,15 +133,12 @@ function FormatLetter(n,str,property){
     }
     const len=str.length;
     
-    let getRsltLen= (x,m) => Decimal.logarithm(Decimal.minus(m,1).mul(x).plus(1),m);
+    const getRsltLen= (x,m) => Decimal.logarithm(Decimal.minus(m,1).mul(x).plus(1),m);
     const rsltLen = getRsltLen(n,len).floor();
-    //console.log("rsltLen: "+rsltLen);
     let skippedAmount=rsltLen.minus(option.show);
-    ({eCount,mNumber}=calEcountAndMnumber(skippedAmount,option.base,option.powMaxExp));
-    console.log(skippedAmount);
-    console.log(eCount);
+    ({eCount,mNumber}=calEcountAndMnumber(skippedAmount,len,option.powMaxExp));
+    print();
     if(n.absLog10().lt(powMaxExp)){
-        //console.log("skippedAmount: "+skippedAmount)
         let isSkipped=rsltLen.gt(option.maxFullShow);
         //console.log("isSkipped: "+isSkipped+" maxfullshow: "+option.maxFullShow)
         if(isSkipped){
@@ -134,11 +155,11 @@ function FormatLetter(n,str,property){
         return resultString;
     }
     else if(n.absLog10().absLog10().lt(powMaxExp)){
-        resultString=`[${FormatValue(skippedAmount, { notation: option.notation, smallDec: 0 })}]${eCount}`;
+        resultString=`[${FormatValue(skippedAmount, { notation: option.notation, smallDec: 0 })}]`;
         return resultString;
     }
     else{
-        resultString=`[${FormatValue(skippedAmount, { notation: option.notation, smallDec: 0 })}]${eCount}`;
+        resultString=`[${FormatValue(skippedAmount, { notation: option.notation, smallDec: 0 })}]`;
         return resultString;
     }
     return "Format Error";
