@@ -63,7 +63,9 @@ function UpdateVariables(){
     playTime=(Date.now()-player.createdTime)/1000;
 }
 function InputLoop(){
-    player.inputValue.astroidPerAllocation=new Decimal(document.getElementById("astroid-per-allocation-input").value).floor();
+    let tmpDecimal=new Decimal(document.getElementById("astroid-per-allocation-input").value).floor()
+    if(!tmpDecimal.isFinite()||tmpDecimal.isNan()) tmpDecimal=Decimal.dZero;
+    player.inputValue.astroidPerAllocation=tmpDecimal;
 }
 function MainLoop(){
     let diff = (Date.now() - player.lastUpdate)/1000;
