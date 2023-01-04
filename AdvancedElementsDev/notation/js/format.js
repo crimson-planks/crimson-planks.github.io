@@ -453,7 +453,12 @@ function FormatValue(amount, property={}){
                 return `${NumberToBase(mantissa,option.base,option.dec-rpower+(power.sign===-1))}e${calExpStr(power)}`;
             }
             if(option.notation==="logarithm"){
-                return `e${calExpStr(power)}`
+                return `e${FormatValue(power,{
+                    ...option,
+                    notation: option.subNotation,
+                    dec: option.hExpDec,
+                    maxBeforeNotate: option.subMaxBeforeNotate, 
+                    maxBeforeNegativePowerNotate: option.subMaxBeforeNegativePowerNotate})}`
             }
         }
         else if(Decimal.MagAbs(amount).lessThan(Decimal.fromComponents(1,option.maxNotatedLayer,powMaxExp))){

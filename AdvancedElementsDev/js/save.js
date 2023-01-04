@@ -18,7 +18,6 @@ function ConvertToObject(object){
     if(["boolean","number","string","undefined"].includes(typeof object)){
         return object;
     }
-    if(object===null) return object;
     if(typeof object==="bigint"){return {_type: "bigint",payload: object.toString()}};
     if(typeof object==="function"){
         return {_type: "function",payload: object.toString()};
@@ -29,17 +28,18 @@ function ConvertToObject(object){
     if(new Upgrade().constructor === object.constructor){
         return ConvertToObject({...object});
     }
-    if(typeof(object)===typeof({})){
+    if(typeof object==="object"){
+        if(Array.isArray(object)){
+            let returnArray=object.map(ConvertToObject);
+            return returnArray;
+        }
         let returnObject={};
         for(key in object){
             returnObject[key]=ConvertToObject(object[key]);
         }
         return returnObject;
     }
-    else if(typeof(object)===typeof([])){
-        let returnArray=object.map(ConvertToObject);
-        return returnArray;
-    }
+    return object;
 }
 
 function ConvertToClass(object){

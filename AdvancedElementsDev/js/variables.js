@@ -49,7 +49,6 @@ var player = {
         new Decimal("4")
     ],
     fusion:{
-        showCost: new Decimal("1e60"),
         unlocked: false,
         unlockCost: new Decimal("1e90"),
         activated: false,
