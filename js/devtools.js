@@ -77,3 +77,20 @@ dev.addEventListener=function(key,func){
         }
       }, false);
 }
+dev.printStandardList=function(){
+    const list=["k","M","B","T","Qa","Qt","Sx","Sp","Oc","No"];
+    const extraList=[
+        ["","U","D","T","Qa","Qt","Sx","Sp","O","N"],
+        ["","Dc","Vg","Tg","Qg","Qq","Sg","St","Og","Ng"],
+        ["","Ce","Du","Tc","Qc","Qn","Sc","Sn","Ot","Nt"]
+    ]
+    const finalList=Array(1000);
+    for(let i=0;i<=999;i++){
+        if(i<10) {
+            finalList[i]=list[i];
+            continue;
+        }
+        finalList[i]=extraList[0][i%10]+extraList[1][Math.floor(i/10)%10]+extraList[2][Math.floor(i/100)%10];
+    }
+    return finalList
+}

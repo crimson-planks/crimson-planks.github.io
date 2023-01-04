@@ -11,7 +11,7 @@ function UpdateGUI(){
     let resultText="";
     let resultDecimal=new Decimal(document.getElementById("input-text").value);
     player.notation=document.getElementById("notation-dropdown").value
-    resultText+=FormatValue(resultDecimal)
+    resultText+=FormatValue(resultDecimal,{htmlSafe: false})
     document.getElementById("output-text").innerHTML=resultText;
 }
 document.body.onload=init()

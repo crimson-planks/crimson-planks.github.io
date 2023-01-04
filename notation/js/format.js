@@ -1,7 +1,11 @@
+"use strict";
 //Warning: bugs, lots of bugs.
 //dependent on ../js/components/notation.js
-let clickerHeroesList=["K","M","B","T","q","Q","s","S","O","N","d","U","D","!","@","#","$","%","^","&","*","[","}","\'","\"","/","|",":",";","<",">",",",".","\\","?","~","\xb1","a","A","\xe1","\xc1","\xe9","\xc9","\xed","\xcd","\xfa","\xda","\xe6","\xc6","\xd8","\xbf","\xb6","\u0192","\xa3","\u20a3","\u20bf","\u20ac","\u20b2","h",0,"j","J","p","P","w","\u20a9","v","V","y","\xa5","\xa4","\u2211","\xae","\u2020","\xa8","\u0131","\u03c0","\xdf","\u2202","\xa9","\u03bb","\u03a9","\u2248","\xe7","\u221a","\u222b","\u2122","\u2021","\u0130","\u220f","\u2206","\xc7","\u25ca","\xab","\xbb","\u2227","\u2229","\u22bb","\xf1","\xd1","C","\u0393","\u221e","\u03b1","\u03b3","\u03b4","\u03b5","\u03b6","\u03b8","\u03bb","\u03be","\u03c4","\u03c5","\u03c6","\u03c7","\u03c8","\u039e","\u03a6","\u2192","\u2190","\u2191","\u2193","\u272a","+","-","\xd7","\xf7","\u2573","\u2660","\u2665","\u2666","\u2663","\u24b6","\u24b7","\u24b8","\u24b9","\u24ba","\u24bb","\u24bc","\u24bd","\u24be","\u24bf","\u24c0","\u24c1","\u24c2","\u24c3","\u24c4","\u24c5","\u24c6","\u24c7","\u24c8","\u24c9","\u24ca","\u24cb","\u24cc","\u24cd","\u24ce","\u24cf","\u2070","\xb9","\xb2","\xb3","\u2074","\u2075","\u2076","\u2077","\u2078","\u2079","\u207a","\u207b","\u207c","\u207d","\u207e","\u2220","\u29a3","\xb0","\u27c2","\u2225","\u221f","\ud83c\udd30","\ud83c\udd31","\ud83c\udd32","\ud83c\udd33","\ud83c\udd34","\ud83c\udd35","\ud83c\udd36","\ud83c\udd37","\ud83c\udd38","\ud83c\udd39","\ud83c\udd3a","\ud83c\udd3b","\ud83c\udd3c","\ud83c\udd3d","\ud83c\udd3e","\ud83c\udd3f","\ud83c\udd40","\ud83c\udd41","\ud83c\udd42","\ud83c\udd43","\ud83c\udd44","\ud83c\udd45","\ud83c\udd46","\ud83c\udd47","\ud83c\udd48","\ud83c\udd49",]
-const MAX_ECOUNT_CAL=8;
+const clickerHeroesList=["K","M","B","T","q","Q","s","S","O","N","d","U","D","!","@","#","$","%","^","&","*","[","}","\'","\"","/","|",":",";","<",">",",",".","\\","?","~","\xb1","a","A","\xe1","\xc1","\xe9","\xc9","\xed","\xcd","\xfa","\xda","\xe6","\xc6","\xd8","\xbf","\xb6","\u0192","\xa3","\u20a3","\u20bf","\u20ac","\u20b2","h",0,"j","J","p","P","w","\u20a9","v","V","y","\xa5","\xa4","\u2211","\xae","\u2020","\xa8","\u0131","\u03c0","\xdf","\u2202","\xa9","\u03bb","\u03a9","\u2248","\xe7","\u221a","\u222b","\u2122","\u2021","\u0130","\u220f","\u2206","\xc7","\u25ca","\xab","\xbb","\u2227","\u2229","\u22bb","\xf1","\xd1","C","\u0393","\u221e","\u03b1","\u03b3","\u03b4","\u03b5","\u03b6","\u03b8","\u03bb","\u03be","\u03c4","\u03c5","\u03c6","\u03c7","\u03c8","\u039e","\u03a6","\u2192","\u2190","\u2191","\u2193","\u272a","+","-","\xd7","\xf7","\u2573","\u2660","\u2665","\u2666","\u2663","\u24b6","\u24b7","\u24b8","\u24b9","\u24ba","\u24bb","\u24bc","\u24bd","\u24be","\u24bf","\u24c0","\u24c1","\u24c2","\u24c3","\u24c4","\u24c5","\u24c6","\u24c7","\u24c8","\u24c9","\u24ca","\u24cb","\u24cc","\u24cd","\u24ce","\u24cf","\u2070","\xb9","\xb2","\xb3","\u2074","\u2075","\u2076","\u2077","\u2078","\u2079","\u207a","\u207b","\u207c","\u207d","\u207e","\u2220","\u29a3","\xb0","\u27c2","\u2225","\u221f","\ud83c\udd30","\ud83c\udd31","\ud83c\udd32","\ud83c\udd33","\ud83c\udd34","\ud83c\udd35","\ud83c\udd36","\ud83c\udd37","\ud83c\udd38","\ud83c\udd39","\ud83c\udd3a","\ud83c\udd3b","\ud83c\udd3c","\ud83c\udd3d","\ud83c\udd3e","\ud83c\udd3f","\ud83c\udd40","\ud83c\udd41","\ud83c\udd42","\ud83c\udd43","\ud83c\udd44","\ud83c\udd45","\ud83c\udd46","\ud83c\udd47","\ud83c\udd48","\ud83c\udd49",]
+const emojiList=["\ud83c\udf4e","\ud83e\udde0","\ud83d\udc31","\ud83e\udd41","\ud83d\udc18","\ud83d\udc6a","\ud83d\ude00","\ud83c\udfe8","\u261d","\ud83c\udf83","\ud83d\udd11","\ud83c\udf6d","\ud83d\udcb0","\ud83d\ude10","\ud83e\uddc5","\ud83c\udf55","\u2753","\ud83e\udd16","\u2728","\ud83e\uddb7","\u2602","\ud83c\udf0b","\ud83c\udf49","\u274c","\ud83e\ude80","\u26a1",]
+const standardList=["k","M","B","T","Qa","Qt","Sx","Sp","Oc","No"];
+const MAX_ECOUNT_CAL=6;
+const MAX_BRACKET_CAL=12;
 function RepeatArr(func,n){
     let arr=Array(n)
     for(let i=0;i<n;i++){
@@ -11,9 +15,35 @@ function RepeatArr(func,n){
 }
 const FormatWithCommas= (num)=>Intl.NumberFormat('en-US').format(num);
 
+const calLetterId = function(n,property){
+    n=new Decimal(n);
+    let option=GetOption(property);
+    let power=n.abs().log(option.base).abs().div(3).floor().mul(3);
+    return power.mul(power.sign).div(3).floor();
+}
+
+const getStandardUnit=function(n){
+    const smallArr=["k","M","B","T","Qa","Qt","Sx","Sp","Oc","No"];
+    const standardArr=[
+        ["","U","D","T","Qa","Qt","Sx","Sp","O","N"],
+        ["","Dc","Vg","Tg","Qg","Qq","Sg","St","Og","Ng"],
+        ["","Ce","Du","Tc","Qc","Qn","Sc","Sn","Ot","Nt"]
+    ]
+    if(!(0<=n&&n<=999)) throw RangeError("must be 0<=n<=999");
+    if(n<10) return smallArr[n];
+    return standardArr[0][n%10]+standardArr[1][Math.floor(n/10)%10]+standardArr[2][Math.floor(n/100)%10];
+}
+const FormatStandard=function(n,property){
+    if(n<=999) return getStandardUnit(n);
+    if(n<=999999999999){
+        while(false){
+
+        }
+    }
+}
 function calEcountAndMnumber(amount,base=10,powMaxExp=new Decimal(1e9)){
     let isExpNegative=false;
-    let calFinalmNumber=(mNumber)=>isExpNegative?Decimal.minus(0,mNumber):mNumber
+    const calFinalmNumber=(mNumber)=>isExpNegative?Decimal.minus(0,mNumber):mNumber
     let logbase=Math.log(base);
     amount=new Decimal(amount).abs();
     if(amount.absLog10().lt(0)){
@@ -24,7 +54,7 @@ function calEcountAndMnumber(amount,base=10,powMaxExp=new Decimal(1e9)){
 
     if(base!==Math.floor(base)) throw RangeError("base must be an integer");
     if(base<2) throw RangeError("base must be greater than or equal to 2");
-    
+
     let eCount=-1;
     let tmpDecimal=powMaxExp;
     let mNumber=Decimal.dNaN;
@@ -42,7 +72,7 @@ function calEcountAndMnumber(amount,base=10,powMaxExp=new Decimal(1e9)){
         let reducedAmount=amount.layer-MAX_ECOUNT_CAL;
         tmpAmount.layer=MAX_ECOUNT_CAL;
         let calResult=calEcountAndMnumber(tmpAmount,base,powMaxExp);
-        console.log(calResult);
+        //console.log(calResult);
         eCount=calResult.eCount+reducedAmount;
         mNumber=calResult.mNumber;
         
@@ -51,20 +81,25 @@ function calEcountAndMnumber(amount,base=10,powMaxExp=new Decimal(1e9)){
     //return amount.slog(base,5).minus(powMaxExp.slog(base,5)).floor().toNumber()
 }
 function GetOption(property){
+    let notationOption;
     ({notationOption}=player)
-    if(property.notation===undefined){
-        property.notation=player.notation;
-    }
     const tmpOption={...{notation: player.notation}, ...property};
     let optionName=tmpOption.notation;
     if(notationOption[optionName]===undefined){
         if(["letters","emoji"].includes(notationOption[optionName])) optionName="letters"
         else optionName="general";
     }
-    let option={...(notationOption["general"]), ...(notationOption[optionName]), ...property}
+    let option={...(notationOption["general"]), ...(notationOption[optionName]), ...property};
+    if([undefined,"_same"].includes(option.notation)) option.notation=player.notation;
     return option;
 }
-
+function calSubNotation(option){
+    option.subNotation=option.subNotationArray[0];
+    option.subNotationArray=option.subNotationArray.slice(1);
+    if(option.subNotation==="_same") option.subNotation=option.notation;
+    if(option.subNotationArray===undefined||option.subNotationArray.length===0) option.subNotationArray=["_same"];
+    return option;
+}
 function ConsecutiveCharacter(chr,n){
     //f("M",3)=["","M","MM","MMM"];
     let rarr=(RepeatArr(
@@ -91,34 +126,49 @@ function ArrToInequality(arr){
     });
     return rsltarr;
 }
-function calLetterBracketCount(n,strLen,property){
-    n=new Decimal(n);
-    let option=GetOption(property);
-    let bracketCount=0;
-    let skippedAmount=Decimal.dInf;
-    while(n.absLog10().lt(powMaxExp)){
-        const getRsltLen= (x,m) => Decimal.log(Decimal.minus(m,1).mul(x).plus(1),m);
-        skippedAmount=getRsltLen(n,strLen).floor().minus(option.show);
-        ({eCount,mNumber}=calEcountAndMnumber(skippedAmount,strLen,option.powMaxExp));
-        n=skippedAmount;
-
-        let power=n.abs().log(option.base).abs().div(3).floor().mul(3).mul(power.sign);
-        if(power.lte(0)) power=power.add(-3);
-        let letterId=power.div(3).floor();
-        n=letterId;
-        bracketCount++;
-    }
-    return bracketCount;
-}
-function FormatLetter(n,str,property){
+function calLetterBracketAndMnumber(letterId,strLen,property){
     function print(){
         return;
-        console.log("n: "+n);
-        console.log("skippedAmount: "+skippedAmount);
-        console.log("eCount:"+eCount);
+        console.log(`n: ${letterId}, mNumber: ${mNumber}, bracketCount: ${bracketCount}`);
     }
-    ({notationOption}=player)
-    if(Object.keys(n)!==Object.keys(new Decimal())) n=new Decimal(n);
+    if(typeof property === "undefined") property={};
+    letterId=new Decimal(letterId).abs();
+    let option=GetOption(property);
+    let powMaxExp=Decimal.pow(option.base,option.maxExp);
+    let bracketCount=0;
+    let mNumber=Decimal.dNaN;
+    const getRsltLen= (x,m) => Decimal.log(Decimal.minus(m,1).mul(x).plus(1),m);
+    const getSkippedAmount= (n,strLen) => getRsltLen(n,strLen).floor().minus(option.show);
+    if(letterId.layer>MAX_BRACKET_CAL){
+        let tmpLayer=MAX_BRACKET_CAL-2+((letterId.layer-MAX_BRACKET_CAL)%2);
+        let reducedLayer=letterId.layer-tmpLayer;
+        let reducedBrackets=reducedLayer/2;
+        let tmpN=Decimal.fromComponents(1,tmpLayer,letterId.mag);
+        ({bracketCount,mNumber}=calLetterBracketAndMnumber(tmpN,strLen,option));
+        bracketCount+=reducedBrackets;
+    }
+    else{
+        while(letterId.abs().log(option.base).gt(powMaxExp)){
+            letterId=getSkippedAmount(letterId,strLen);
+            mNumber=letterId;
+            //print();
+            letterId=calLetterId(letterId);
+            //({eCount,mNumber}=calEcountAndMnumber(skippedAmount,strLen,option.powMaxExp));
+            bracketCount++;
+            //print();
+        }
+    }
+    return {bracketCount: bracketCount, mNumber: mNumber};
+}
+
+function FormatLetter(letterId,str,property){
+    function print(){
+        return;
+        console.log("n: "+letterId);
+        console.log("skippedAmount: "+skippedAmount);
+        console.log("mNumber"+mNumber);
+    }
+    if(Object.keys(letterId)!==Object.keys(new Decimal())) letterId=new Decimal(letterId);
     if(str===undefined){
         str="abcdefghijklmnopqrstuvwxyz";
     }
@@ -127,45 +177,54 @@ function FormatLetter(n,str,property){
     let powMaxExp=Decimal.pow(option.base,option.maxExp);
     let resultString="";
     let isNegative=false;
-    if(n.lt(0)){
-        n=n.abs();
+    if(letterId.lt(0)){
+        letterId=letterId.abs();
         isNegative=true;
     }
     const len=str.length;
     
-    const getRsltLen= (x,m) => Decimal.logarithm(Decimal.minus(m,1).mul(x).plus(1),m);
-    const rsltLen = getRsltLen(n,len).floor();
+    const getRsltLen= (x,m) => Decimal.log(Decimal.minus(m,1).mul(x).plus(1),m);
+    const rsltLen = getRsltLen(letterId,len).floor();
     let skippedAmount=rsltLen.minus(option.show);
-    ({eCount,mNumber}=calEcountAndMnumber(skippedAmount,len,option.powMaxExp));
+    let bracketCount;
+    let mNumber;
+    ({bracketCount,mNumber}=calLetterBracketAndMnumber(letterId,len,option));
     print();
-    if(n.absLog10().lt(powMaxExp)){
+    if(letterId.absLog10().lt(powMaxExp)){
         let isSkipped=rsltLen.gt(option.maxFullShow);
         //console.log("isSkipped: "+isSkipped+" maxfullshow: "+option.maxFullShow)
         if(isSkipped){
-            n=n.div(Decimal.pow(len,skippedAmount)).floor();
+            letterId=letterId.div(Decimal.pow(len,skippedAmount)).floor();
             //console.log(n);
-            resultString=`[${FormatValue(skippedAmount, { notation: option.notation, smallDec: 0 })}]`
+            resultString=`[${FormatValue(skippedAmount, { ...option, notation: option.subNotation, smallDec: 0 })}]`
         }
-        while(n.gt(0)){
-            resultString=str[(n-1)%len]+resultString;
-            n=n.minus(1).div(len).floor();
+        while(letterId.gt(0)){
+            resultString=str[(letterId-1)%len]+resultString;
+            letterId=letterId.minus(1).div(len).floor();
             //console.log(n.toString());
         }
         if(isNegative) resultString=option.negativeSign+resultString;
         return resultString;
     }
-    else if(n.absLog10().absLog10().lt(powMaxExp)){
-        resultString=`[${FormatValue(skippedAmount, { notation: option.notation, smallDec: 0 })}]`;
-        return resultString;
+    else if(bracketCount<2){
+        return `[${FormatValue(skippedAmount, { ...option, notation: option.subNotation, smallDec: 0 })}]`;
+    }
+    else if(bracketCount<option.maxNotatedBracketCount){
+        let prefix='';
+        let suffix='';
+        for(let i=0;i<bracketCount;i++) {
+            prefix=prefix.concat('[');
+            suffix=suffix.concat(']');
+        }
+        return prefix+FormatValue(mNumber, {...option, notation: option.subNotation, smallDec: 0 })+suffix;
     }
     else{
-        resultString=`[${FormatValue(skippedAmount, { notation: option.notation, smallDec: 0 })}]`;
-        return resultString;
+        return `[${FormatValue(mNumber, {...option, notation: option.subNotation, smallDec: 0})}](${FormatValue(bracketCount, {...option, notation: option.subNotation,smallDec: 0})})`; 
     }
     return "Format Error";
 }
 function GetDefaultBaseStr(base){
-    chrArr="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/".split("")
+    let chrArr="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/".split("")
     if(base==64){
         chrArr="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");
     }
@@ -243,6 +302,7 @@ function NumberToBase(n,base=10,digits=20,minDigit,chrArr){
     return rsltStr;
 }
 function RomanNumeralsUnit(n){
+    let notationOption;
     ({notationOption}=player)
     if(n.constructor===new Decimal().constructor) n=n.toNumber();
     if(n>3999+11/12){
@@ -257,14 +317,14 @@ function RomanNumeralsUnit(n){
                 ["","I","II","III","IV","V","VI","VII","VIII","XI"],
                 ]
     let rslt=""
-    let subPrefixes=notationOption.roman.altFractions ? [] : ["","\xb7",":","\u2234","\u2237","\u2059",];
+    let subPrefixes=notationOption.roman.altFractions ? Array(5) : ["","\xb7",":","\u2234","\u2237","\u2059",];
     if(notationOption.roman.altFractions){
         subPrefixes=ConsecutiveCharacter("\xb7",6)
     }
     //console.log(subPrefixes)
-    let subPrefixes2=[]
+    let subPrefixes2=Array(5);
     subPrefixes.forEach(function(value,index){
-        subPrefixes2=subPrefixes2.concat(["S"+subPrefixes[index]])
+        subPrefixes2[index]="S"+subPrefixes[index]
     });
     subPrefixes=subPrefixes.concat(subPrefixes2)
     //console.log(subPrefixes)
@@ -278,32 +338,33 @@ function RomanNumeralsUnit(n){
     return rslt;
 }
 function FormatValue(amount, property={}){
-    ({notationOption}=player)
+    let notationOption;
+    ({notationOption}=player);
     if(property.notation===undefined){
         property.notation=player.notation;
     }
     const tmpOption={...{notation: player.notation}, ...property};
     let optionName=tmpOption.notation;
     if(notationOption[optionName]===undefined){
-        if(["emoji"].includes(notationOption[optionName])) optionName="letters"
+        if(["emoji"].includes(notationOption[optionName])) optionName="letters";
         else optionName="general";
     }
-
     let option=GetOption(property);
-
     if(option.htmlSafe){
-        return FormatValue(amount,{...option, ...{htmlSafe: false}});
+        return ConvertToHTMLSafe(FormatValue(amount,{...option, htmlSafe: false}));
     }
+
     //code used by many formats
     let powMaxExp=Decimal.pow(option.base,option.maxExp);
     amount=new Decimal(amount);
     
-    if(!Decimal.isFinite(amount)){
-        return "Infinite";
-    }
     if(Decimal.isNaN(amount)){
         return "NaN";
     }
+    if(!Decimal.isFinite(amount)){
+        return "Infinite";
+    }
+    option=calSubNotation(option);
     let eString="";
     /*
     let eCount=amount.layer-1;
@@ -323,7 +384,7 @@ function FormatValue(amount, property={}){
     let eCount=calResult.eCount;
     let mNumber=calResult.mNumber;
     if(eCount>0){
-        if(option.powerTower) eString=FormatValue(eCount,{...option, smallDec:0,dec:4,maxBeforeNotate:4})+"PT"
+        if(option.powerTower) eString=FormatValue(eCount,{...option, notation: option.subNotation, smallDec:0,dec:4,maxBeforeNotate:4})+"PT"
         else if(eCount<=option.maxNotatedLayer) for(let i=0;i<eCount;i++) eString+="e";
     }
     
@@ -335,14 +396,15 @@ function FormatValue(amount, property={}){
     
     //fix 9995 formatting to 10.00e3 -> formatting to 1.00e4
     let power=amount.abs().log(option.base);
+    let mantissa;
     //console.log("power: "+power.toString())
-    if((["scientific","engineering","engineering-alt","letters","seximal"].includes(option.notation))){
+    if((["scientific","engineering","engineering-alt","letters","emoji","seximal"].includes(option.notation))){
         let cord=Math.pow(option.base,option.dec+2);
-        let ford=cord-option.base/2;
+        let ford=cord-option.base/2; 
         power=power.add(Math.log(cord/ford)/Math.log(option.base));
     }
     power=power.minus(option.extraDigit);
-    if(["scientific","engineering","engineering-alt","logarithm","letters","seximal"].includes(option.notation)){
+    if(["scientific","engineering","engineering-alt","logarithm","letters","emoji","seximal"].includes(option.notation)){
         if(amount.eq(0)||power.abs().lessThan(power.sign===-1 ? option.maxBeforeNegativePowerNotate : option.maxBeforeNotate))
             return NumberToBase(amount,option.base,option.smallDec)
     }
@@ -352,6 +414,15 @@ function FormatValue(amount, property={}){
         //console.log(power);
 
         if(Decimal.MagAbs(amount).lessThan(Decimal.pow(option.base,powMaxExp))){
+            function calExpStr(power){
+                return FormatValue(power,{
+                    ...option,
+                    notation: option.subNotation,
+                    smallDec: 0, 
+                    dec: option.hExpDec,
+                    maxBeforeNotate: option.subMaxBeforeNotate, 
+                    maxBeforeNegativePowerNotate: option.subMaxBeforeNegativePowerNotate})
+            }
             if(option.notation==="scientific"){
                 power=power.floor();
                 if(power.lt(0)){
@@ -360,7 +431,7 @@ function FormatValue(amount, property={}){
                 
                 let mantissa=amount.div(Decimal.pow(option.base,power));
                 //console.log(`amount: ${amount.toString()} power: ${power.toString()} mantissa: ${mantissa.toString()}`)
-                return `${NumberToBase(mantissa,option.base,option.dec)}e${NumberToBase(power,option.base,0)}`;
+                return `${NumberToBase(mantissa,option.base,option.dec)}e${calExpStr(power)}`;
             }
             if(option.notation==="engineering"){
                 //console.log(power)
@@ -369,7 +440,7 @@ function FormatValue(amount, property={}){
                 if(power.lte(0)) power=power.add(-3);
 
                 let mantissa=amount.div(Decimal.pow(option.base,power));
-                return `${NumberToBase(mantissa,option.base,option.dec)}e${NumberToBase(power,option.base,0)}`;
+                return `${NumberToBase(mantissa,option.base,option.dec)}e${calExpStr(power)}`;
             }
             if(option.notation==="engineering-alt"){
                 power=power.floor();
@@ -379,21 +450,21 @@ function FormatValue(amount, property={}){
 
                 rpower=rpower.minus(power).toNumber();
                 let mantissa=amount.div(Decimal.pow(10,power));
-                return `${NumberToBase(mantissa,option.base,option.dec-rpower+(power.sign===-1))}e${power}`;
+                return `${NumberToBase(mantissa,option.base,option.dec-rpower+(power.sign===-1))}e${calExpStr(power)}`;
             }
             if(option.notation==="logarithm"){
-                return `e${NumberToBase(power,option.base,option.dec)}`
+                return `e${calExpStr(power)}`
             }
         }
         else if(Decimal.MagAbs(amount).lessThan(Decimal.fromComponents(1,option.maxNotatedLayer,powMaxExp))){
-            return eString+FormatValue(mNumber,{...option, ...{dec: option.hExpDec}});
+            return eString+FormatValue(mNumber,{...option, notation: option.subNotation,dec: option.expDec});
         }
         else{
-            if(notationOption.general.powerTower) return eString+FormatValue(mNumber,{...option, dec: option.hExpDec});
-            return `(e^${FormatValue(eCount, {...option, ...{smallDec:0,dec:3,maxBeforeNotate: option.hExpDec}})})${FormatValue(mNumber,{...option, dec:4})}`;
+            if(notationOption.general.powerTower) return eString+FormatValue(mNumber,{...option, notation: option.subNotation,dec: option.hExpDec});
+            return `(e^${FormatValue(eCount, {...option, notation: option.subNotation,smallDec:0,dec:option.hExpDec})})${FormatValue(mNumber,{...option, notation: option.subNotation, dec:option.expDec})}`;
         }
     }
-    if(["letters"].includes(option.notation)){
+    if(["letters","emoji"].includes(option.notation)){
         power=power.abs().div(3).floor().mul(3).mul(power.sign);
         if(power.lte(0)) power=power.add(-3);
         let letterId=power.div(3).floor();
@@ -406,7 +477,11 @@ function FormatValue(amount, property={}){
         if(option.notation==="letters"){
             letterStr=FormatLetter(letterId,"abcdefghijklmnopqrstuvwxyz",option);
         }
-
+        if(option.notation==="emoji"){
+            letterStr=FormatLetter(letterId
+                ,emojiList
+                ,option);
+        }
         if(letterStr!="") return mantissaStr+letterStr;
     }
     if(option.notation==="seximal"){
