@@ -13,9 +13,15 @@ function AreArraysEqual(array1=[], array2=[]){
 }
 function ConvertToObject(object){
     if(object===null) return object;
-    if(object===Infinity) return "_Infinity";
-    if(arrayOfTypes.includes(typeof(object))){
+    //if(object===Infinity) return "_Infinity";
+    if(object===Infinity) return {_isInfinity:true}
+    if(["boolean","number","string","undefined"].includes(typeof object)){
         return object;
+    }
+    if(object===null) return object;
+    if(typeof object==="bigint"){return {_type: "bigint",payload: object.toString()}};
+    if(typeof object==="function"){
+        return {_type: "function",payload: object.toString()};
     }
     if(new Decimal().constructor === object.constructor){
         return ConvertToObject({...object});
@@ -38,10 +44,18 @@ function ConvertToObject(object){
 
 function ConvertToClass(object){
     if(object===null) return object;
-    if(arrayOfTypes.includes(typeof(object))){
+    if(object==="null") return object;
+    if(["boolean","number","string","undefined"].includes(typeof(object))){
         return object;
     }
     let objectKeys=Object.keys(object);
+    //legacy support
+    if(object==="_Infinity") return Infinity;
+    //new infinity representation
+    if(object._isInfinity===true) return Infinity;
+
+    if(object._type==="function") return Function(object.payload);
+    if(object._type==="bigint") return BigInt(object.payload);
     if(AreArraysEqual(Object.keys(new Decimal()),objectKeys)){
         //for break_infinity.js
         /*

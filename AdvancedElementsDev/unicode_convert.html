@@ -1,5 +1,5 @@
 <script>
-    let testArray=['', '·', ':', '∴', '∷', '⁙']
+    let testArray=["🍎","🧠","🐱","🥁","🐘","👪","😀","🏨","☝️","🎃","🔑","🍭","💰","😐","🧅","🍕","❓","🤖","✨","🦷","☂️","🌋","🍉","❌","🪀","⚡"]
     let rsltArr=[];
     let rsltStr="[";
     testArray.forEach(function(element){
@@ -32,6 +32,7 @@
         //console.log(element.codePointAt(0).toString(16));
         //if(element.length>1) console.log(element);
     });
+    console.log(rsltArr)
     rsltArr.forEach(function(element){
         rsltStr+=`"${element}",`
     });

@@ -4,6 +4,8 @@ player.notationOption={
         smallDec:2,
         maxBeforeNotate:3,
         maxBeforeNegativePowerNotate: 2,
+        subMaxBeforeNotate: 9,
+        subMaxBeforeNegativePowerNotate: 9,
         maxExp: 9,
         maxNotatedLayer: 4,
         customNegative: false,
@@ -11,16 +13,17 @@ player.notationOption={
         customNegativeExp: false,
         extraDigit: 0,
         hExpDec: 4,
+        expDec: 4,
         powerTower: false,
         base: 10,
         htmlSafe: true,
+        maxFullShow: 7,
+        show: 7,
+        maxNotatedBracketCount: 3,
+        subNotationArray: ["_same"]
     },
     roman:{
         altFractions: false
-    },
-    letters:{
-        maxFullShow: 7,
-        show: 7
     },
     inequality:{
         smallDec:4,
@@ -36,11 +39,11 @@ player.notationOption={
         smallDec: 3
     }
 }
-const notationList=["scientific","engineering","engineering-alt","logarithm","letters","seximal","inequality"];
+const notationList=["scientific","engineering","engineering-alt","logarithm","letters","emoji","seximal","inequality"];
 const notationGroup=[
     ["scientific","engineering","engineering-alt"],
     ["logarithm"],
-    ["letters"],
+    ["letters","emoji"],
     ["seximal"],
     ["inequality"],
 ];
@@ -50,6 +53,7 @@ const notationNames={
     "engineering-alt":"Alternative Engineering",
     "logarithm":"Logarithm",
     "letters":"Letters",
+    "emoji":"Emoji",
     "inequality":"Inequality",
     "seximal":"Seximal"
 }

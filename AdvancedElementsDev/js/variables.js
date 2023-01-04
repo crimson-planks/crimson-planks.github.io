@@ -1,4 +1,3 @@
-const arrayOfTypes=[typeof(true), typeof(0), typeof(""), typeof(undefined)]
 //max value of 64 bit floating point in javascript
 const SMALL_INFINITY = new Decimal(Number.MAX_VALUE);
 
