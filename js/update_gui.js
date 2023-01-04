@@ -104,7 +104,7 @@ function UpdateGUI(){
 
     document.getElementById("energy-text4").innerHTML=`Energy Multiplier by Astroid Accelation: ${FormatValue(player.energy.multByAccel)}x`
     //fusion
-    ShowIfBoolean(document.getElementById("unlock-fusion-button"),(!player.fusion.unlocked)&&GetIfBuyable(player.fusion.showCost));
+    ShowIfBoolean(document.getElementById("unlock-fusion-button"),(!player.fusion.unlocked)&&GetIfBuyable(new Decimal("1e40")));
     ChangeColorIfBuyable(document.getElementById("unlock-fusion-button"),player.fusion.unlockCost);
 
     document.getElementById("fuse-button").innerHTML=player.fusion.activated ? "Stop fusing hydrogen" : "Fuse hydrogen";
