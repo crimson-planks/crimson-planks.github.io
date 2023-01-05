@@ -53,7 +53,7 @@ class Upgrade{
                     this.cost=this.cost.mul(10);
                 }
                 else if(this.id[1]==="21"){
-                    this.cost=this.cost.mul("1e3");
+                    this.cost=this.cost.mul("1e6");
                 }
                 else if(this.id[1]==="22"){
                     this.cost=this.cost.mul("1e50");

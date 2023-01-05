@@ -65,8 +65,8 @@ var player = {
             "11":new Upgrade([1,100],[1,"11"],new Decimal('10')),
             "12":new Upgrade([1,1],[1,"12"],new Decimal('10000')),
             "13":new Upgrade([1,10],[1,"13"],new Decimal('1e6')),
-            "14":new Upgrade([0],[1,"14"],new Decimal('1e9')),
-            "21":new Upgrade([0],[1,"21"],new Decimal('1e11')),
+            "14":new Upgrade([0],[1,"14"],new Decimal('1e7')),
+            "21":new Upgrade([0],[1,"21"],new Decimal('1e3')),
             "22":new Upgrade([1,3],[1,"22"],new Decimal('1e15')),
             "23":new Upgrade([0],[1,"23"],new Decimal('1e35')),
             "24":new Upgrade([1,7],[1,"24"],new Decimal('1e50'))
