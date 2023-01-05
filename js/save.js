@@ -56,34 +56,32 @@ function ConvertToClass(object){
 
     if(object._type==="function") return Function(object.payload);
     if(object._type==="bigint") return BigInt(object.payload);
-    if(AreArraysEqual(Object.keys(new Decimal()),objectKeys)){
-        //for break_infinity.js
-        /*
-        return new Decimal(""+object.mantissa+"e"+object.exponent);
-        */
-
-        //for break_eternity.js
-        ({sign,mag,layer}=object);
-        return Decimal.fromComponents(sign,layer,mag);
-    }
-    if(AreArraysEqual(Object.keys(new Upgrade()),objectKeys)){
-        //Upgrade object has multiple Decimal objects in it
-        //Object.keys(object).forEach((key)=>object[key]=ConvertToClass(object[key]));
-        return Upgrade.fromObject(object);
-    }
-    if(AreArraysEqual(Object.keys(new Generator()),objectKeys)){
-        return Generator.fromObject(object);
-    }
-    if(typeof(object)==typeof({})){
-        if(Array.isArray(object)){
-            let returnArray=object.map(ConvertToClass);
-            return returnArray;
-        }
-        let returnObject={};
+    if(typeof(object)=="object"){
         Object.keys(object).forEach(function(key){
-            returnObject[key]=ConvertToClass(object[key]);
+            object[key]=ConvertToClass(object[key]);
         });
-        return returnObject;
+        if(AreArraysEqual(Object.keys(new Decimal()),objectKeys)){
+            //for break_infinity.js
+            /*
+            return new Decimal(""+object.mantissa+"e"+object.exponent);
+            */
+    
+            //for break_eternity.js
+            ({sign,mag,layer}=object);
+            return Decimal.fromComponents(sign,layer,mag);
+        }
+        if(AreArraysEqual(Object.keys(new Upgrade()),objectKeys)){
+            //Upgrade object has multiple Decimal objects in it
+            //Object.keys(object).forEach((key)=>object[key]=ConvertToClass(object[key]));
+            return Upgrade.fromObject(object);
+        }
+        if(AreArraysEqual(Object.keys(new Generator()),objectKeys)){
+            return Generator.fromObject(object);
+        }
+        if(Array.isArray(object)){
+            return object.map(ConvertToClass);
+        }
+        return object;
     }
 }
 function save(){

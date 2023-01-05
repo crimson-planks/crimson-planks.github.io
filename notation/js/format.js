@@ -22,23 +22,62 @@ const calLetterId = function(n,property){
     return power.mul(power.sign).div(3).floor();
 }
 
-const getStandardUnit=function(n){
+const getStandardUnit=function(n,isPart=false,isNoThousand=false){
     const smallArr=["k","M","B","T","Qa","Qt","Sx","Sp","Oc","No"];
+    if(isNoThousand){
+        smallArr[0]='';
+    }
     const standardArr=[
         ["","U","D","T","Qa","Qt","Sx","Sp","O","N"],
         ["","Dc","Vg","Tg","Qg","Qq","Sg","St","Og","Ng"],
-        ["","Ce","Du","Tc","Qc","Qn","Sc","Sn","Ot","Nt"]
+        ["","Ce","Du","Tc","Qd","Qn","Sc","Sn","Ot","Nt"]
     ]
     if(!(0<=n&&n<=999)) throw RangeError("must be 0<=n<=999");
-    if(n<10) return smallArr[n];
+    if(!isPart&&n<10) return smallArr[n];
     return standardArr[0][n%10]+standardArr[1][Math.floor(n/10)%10]+standardArr[2][Math.floor(n/100)%10];
 }
+const getStandardClass2=function(n){
+    const smallArr=["","Mi","Mc","Na","Pc","Fm","At","Zp","Yc","Xn","Vc"]
+    const standardArr=[
+        ["","Me","Due","Tr","Tt","Pt","Hx","Hp","Ote","En"],
+        ["","","Ic","Trc","Ttc","Ptc","Hxc","Hpc","Otc","Enc"],
+        ["","Hc","Dh","Trh","Tth","Ph","Hxh","Hph","Oth","Enh"]
+    ]
+    if(!(0<=n&&n<=999)) throw RangeError("must be 0<=n<=999");
+    if(n<=10) return smallArr[n];
+    let oneStr=standardArr[0][n%10];
+    if(Math.floor(n/10)%10===0){
+        oneStr=smallArr[n%10];
+        return standardArr[2][Math.floor(n/100)%10]+oneStr;
+    }
+    return oneStr+standardArr[1][Math.floor(n/10)%10]+standardArr[2][Math.floor(n/100)%10];
+}
 const FormatStandard=function(n,property){
-    if(n<=999) return getStandardUnit(n);
-    if(n<=999999999999){
-        while(false){
-
+    let option=GetOption(property);
+    n=new Decimal(n);
+    if(n.lte(999)) return getStandardUnit(n);
+    if(n.lte(999999999999)){
+        let rsltStr="";
+        let class2Id=0;
+        let part;
+        while(n.gte(1)){
+            let tmpStr="";
+            part=n.sub(n.div(1000).floor().mul(1000));
+            if(class2Id!==0&&!part.eq(1)){
+                tmpStr+=getStandardUnit(part,true);
+            }
+            if(class2Id===0){
+                tmpStr+=getStandardUnit(part,false,true);
+            }
+            if(!part.eq(0)) tmpStr+=getStandardClass2(class2Id)
+            tmpStr+=(class2Id===0||tmpStr==="" ? '' : '-')
+            rsltStr=tmpStr.concat(rsltStr);
+            console.log(part);
+            n=n.div(1000).floor();
+            class2Id++;
         }
+        if(rsltStr[rsltStr.length-1]=='-') rsltStr=rsltStr.slice(0,-1);{}
+        return rsltStr;
     }
 }
 function calEcountAndMnumber(amount,base=10,powMaxExp=new Decimal(1e9)){
@@ -483,9 +522,7 @@ function FormatValue(amount, property={}){
             letterStr=FormatLetter(letterId,"abcdefghijklmnopqrstuvwxyz",option);
         }
         if(option.notation==="emoji"){
-            letterStr=FormatLetter(letterId
-                ,emojiList
-                ,option);
+            letterStr=FormatLetter(letterId,emojiList,option);
         }
         if(letterStr!="") return mantissaStr+letterStr;
     }
