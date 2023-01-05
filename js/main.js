@@ -40,7 +40,7 @@ function ProductionLoop(diff){
     heliumPerSecond=Decimal.max(
             AbsPow(
                 player.money
-                .div(player.fusion.unlockCost).div(Decimal.max(player.money.pow(0.01),1))
+                .div(player.fusion.unlockCost).div(Decimal.max(player.money.pow(0.0005),1))
                 ,0.125)
                 .mul(player.upgrades[1][14].bought.gt(0) ? player.upgrades[1][14].value : 1)
             ,maxToleratedHeliumPerSecond).minus(maxToleratedHeliumPerSecond);
