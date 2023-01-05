@@ -1,11 +1,7 @@
-Digit,Units,Tens,Hundreds
-1,Me,N/A,Hc
-2,Due,Ic,Dh,
-3,Tr,Trc,Trh,
-4,Tt,Ttc,Tth,
-5,Pt,Ptc,Ph,
-6,Hx,Hxc,Hxh,
-7,Hp,Hpc,Hph,
-8,Ote,Otc,Oth,
-9,En,Enc,Eh,
+Digit,1,2,3,4,5,6,7,8,9
+Units,Me,Due,Tr,Tt,Pt,Hx,Hp,Ote,En,
+Tens,,Ic,Trc,Ttc,Ptc,Hxc,Hpc,Otc,Enc,
+Hundreds,Hc,Dh,Trh,Tth,Ph,Hxh,Hph,Oth,Enh,
+Alternative Units*,Mi,Mc,Na,Pc,Fm,At,Zp,Yc,Xn,Vc
+*,Only when Tens===0
 #Start at 10th -illion

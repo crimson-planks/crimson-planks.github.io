@@ -54,7 +54,7 @@ function CalEnergyMult(){
 }
 const GetFusedLoseRate= function(d){
     if(d.lte(1)&&d.gte(-1)) return new Decimal(1);
-    return player.fusion.loseRate.pow(d.absLog10().absLog10().abs().mul(player.fusion.loseDriftFactor));
+    return player.fusion.loseRate.pow(d.absLog10().abs().div(100).mul(player.fusion.loseDriftFactor));
 }
 function GetFusedAmount(d,diff){
     if(d.lte(1)&&d.gte(-1)) return d;
