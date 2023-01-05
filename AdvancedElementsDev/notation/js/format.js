@@ -54,31 +54,36 @@ const getStandardClass2=function(n){
 }
 const FormatStandard=function(n,property){
     let option=GetOption(property);
-    n=new Decimal(n);
+    n=new Decimal(n).floor();
     if(n.lte(999)) return getStandardUnit(n);
-    if(n.lte(999999999999)){
-        let rsltStr="";
-        let class2Id=0;
-        let part;
-        while(n.gte(1)){
-            let tmpStr="";
-            part=n.sub(n.div(1000).floor().mul(1000));
-            if(class2Id!==0&&!part.eq(1)){
-                tmpStr+=getStandardUnit(part,true);
-            }
-            if(class2Id===0){
-                tmpStr+=getStandardUnit(part,false,true);
-            }
-            if(!part.eq(0)) tmpStr+=getStandardClass2(class2Id)
-            tmpStr+=(class2Id===0||tmpStr==="" ? '' : '-')
-            rsltStr=tmpStr.concat(rsltStr);
-            console.log(part);
-            n=n.div(1000).floor();
-            class2Id++;
+    if(n.gte("1e2999")) return "Format Error";
+    let rsltStr="";
+    let maxShow;
+    if(n.lte("1e63")) maxShow=4;
+    else if(n.lte("1e100")) maxShow=3;
+    else if(n.lte("1e1000")) maxShow=2;
+    else maxShow=1;
+    let skippedAmount=Decimal.max(n.absLog10().div(3).sub(maxShow).add(1),0).floor();
+    let class2Id=skippedAmount;
+    n=n.div(Decimal.pow(1000,skippedAmount));
+    let part;
+    while(n.gte(1)){
+        let tmpStr="";
+        part=n.sub(n.div(1000).floor().mul(1000)).floor();
+        if(class2Id!==0&&!part.eq(1)){
+            tmpStr+=getStandardUnit(part,true);
         }
-        if(rsltStr[rsltStr.length-1]=='-') rsltStr=rsltStr.slice(0,-1);{}
-        return rsltStr;
+        if(class2Id===0){
+            tmpStr+=getStandardUnit(part,false,true);
+        }
+        if(!part.eq(0)) tmpStr+=getStandardClass2(class2Id)
+        tmpStr+=(class2Id===0||tmpStr==="" ? '' : '-')
+        rsltStr=tmpStr.concat(rsltStr);
+        n=n.div(1000).floor();
+        class2Id++;
     }
+    if(rsltStr[rsltStr.length-1]=='-') rsltStr=rsltStr.slice(0,-1);{}
+    return rsltStr;
 }
 function calEcountAndMnumber(amount,base=10,powMaxExp=new Decimal(1e9)){
     let isExpNegative=false;
@@ -437,13 +442,13 @@ function FormatValue(amount, property={}){
     let power=amount.abs().log(option.base);
     let mantissa;
     //console.log("power: "+power.toString())
-    if((["scientific","engineering","engineering-alt","letters","emoji","seximal"].includes(option.notation))){
+    if((["scientific","engineering","engineering-alt","letters","emoji","seximal","standard"].includes(option.notation))){
         let cord=Math.pow(option.base,option.dec+2);
         let ford=cord-option.base/2; 
         power=power.add(Math.log(cord/ford)/Math.log(option.base));
     }
     power=power.minus(option.extraDigit);
-    if(["scientific","engineering","engineering-alt","logarithm","letters","emoji","seximal"].includes(option.notation)){
+    if(["scientific","engineering","engineering-alt","logarithm","letters","emoji","seximal","standard"].includes(option.notation)){
         if(amount.eq(0)||power.abs().lessThan(power.sign===-1 ? option.maxBeforeNegativePowerNotate : option.maxBeforeNotate))
             return NumberToBase(amount,option.base,option.smallDec)
     }
@@ -525,6 +530,20 @@ function FormatValue(amount, property={}){
             letterStr=FormatLetter(letterId,emojiList,option);
         }
         if(letterStr!="") return mantissaStr+letterStr;
+    }
+    if(option.notation==="standard"){
+        let isNegative=false;
+        power=power.abs().div(3).floor().mul(3).mul(power.sign);
+        if(power.lte(0)) power=power.add(-3);
+        let letterId=power.div(3).add(power.lt(0)?1:-1).floor();
+        let mantissaStr="";
+        let wordStr=FormatStandard(letterId.abs(),option);
+        wordStr+=power.lt(0)?'th':''
+        if(power.abs().lt("100000000000")){
+            mantissa=amount.div(Decimal.pow(10,power));
+            mantissaStr=NumberToBase(mantissa,option.base,option.dec);
+        }
+        if(wordStr!="") return mantissaStr+wordStr;
     }
     if(option.notation==="seximal"){
         power=power.abs().div(4).floor().mul(4).mul(power.sign);

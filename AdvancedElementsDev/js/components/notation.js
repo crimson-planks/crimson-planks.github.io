@@ -39,11 +39,11 @@ player.notationOption={
         smallDec: 3
     }
 }
-const notationList=["scientific","engineering","engineering-alt","logarithm","letters","emoji","seximal","inequality"];
+const notationList=["scientific","engineering","engineering-alt","logarithm","letters","emoji","seximal","inequality","standard"];
 const notationGroup=[
     ["scientific","engineering","engineering-alt"],
     ["logarithm"],
-    ["letters","emoji"],
+    ["letters","emoji","standard"],
     ["seximal"],
     ["inequality"],
 ];
@@ -55,5 +55,6 @@ const notationNames={
     "letters":"Letters",
     "emoji":"Emoji",
     "inequality":"Inequality",
-    "seximal":"Seximal"
+    "seximal":"Seximal",
+    "standard":"Standard"
 }
