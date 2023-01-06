@@ -47,8 +47,7 @@ const getStandardClass2=function(n){
     if(n<=10) return smallArr[n];
     let oneStr=standardArr[0][n%10];
     if(Math.floor(n/10)%10===0){
-        oneStr=smallArr[n%10];
-        return standardArr[2][Math.floor(n/100)%10]+oneStr;
+        return standardArr[2][Math.floor(n/100)%10]+smallArr[n%10];
     }
     return oneStr+standardArr[1][Math.floor(n/10)%10]+standardArr[2][Math.floor(n/100)%10];
 }
