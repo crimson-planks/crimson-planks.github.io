@@ -33,7 +33,7 @@ var player = {
     },
     energy: {
         unlocked: false,
-        unlockCost: new Decimal("2"),
+        unlockCost: new Decimal(3),
         astroidsAllocated: new Decimal("0"),
         amount: new Decimal("0"),
         mult: new Decimal(1),
@@ -62,14 +62,14 @@ var player = {
     },
     upgrades: {
         1:{
-            "11":new Upgrade([1,100],[1,"11"],new Decimal('10')),
-            "12":new Upgrade([1,1],[1,"12"],new Decimal('10000')),
-            "13":new Upgrade([1,10],[1,"13"],new Decimal('1e6')),
-            "14":new Upgrade([0],[1,"14"],new Decimal('1e7')),
-            "21":new Upgrade([0],[1,"21"],new Decimal('1e3')),
-            "22":new Upgrade([1,16],[1,"22"],new Decimal('1e17')),
-            "23":new Upgrade([0],[1,"23"],new Decimal('1e35')),
-            "24":new Upgrade([1,7],[1,"24"],new Decimal('1e50'))
+            "11": new Upgrade([1,200],[1,"11"],new Decimal('10')),
+            "12": new Upgrade([1,1],[1,"12"],new Decimal('1000')),
+            "13": new Upgrade([1,10],[1,"13"],new Decimal('1e6')),
+            "14": new Upgrade([0,1000],[1,"14"],new Decimal('1e7')),
+            "21": new Upgrade([0],[1,"21"],new Decimal('100')),
+            "22": new Upgrade([1,16],[1,"22"],new Decimal('1e17')),
+            "23": new Upgrade([0],[1,"23"],new Decimal('1e35')),
+            "24": new Upgrade([1,7],[1,"24"],new Decimal('1e50'))
         }
     }
 }
@@ -86,3 +86,4 @@ var selectedTab="generator-tab"
 var tabArray=["generator", "energy", "fusion"];
 var saveTimer=0;
 var playTime;
+var fastCostIncreaseCalcErrorFactor = 1.2

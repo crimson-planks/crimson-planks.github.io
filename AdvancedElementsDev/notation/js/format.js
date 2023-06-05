@@ -69,7 +69,7 @@ const FormatStandard=function(n,property){
     while(n.gte(1)){
         let tmpStr="";
         part=n.sub(n.div(1000).floor().mul(1000)).floor();
-        if(class2Id!==0&&!part.eq(1)){
+        if(class2Id!==0||part.eq(1)){
             tmpStr+=getStandardUnit(part,true);
         }
         if(class2Id===0){
@@ -79,6 +79,7 @@ const FormatStandard=function(n,property){
         tmpStr+=(class2Id===0||tmpStr==="" ? '' : '-')
         rsltStr=tmpStr.concat(rsltStr);
         n=n.div(1000).floor();
+        //console.log(`n: ${n}, part: ${part}`);
         class2Id++;
     }
     if(rsltStr[rsltStr.length-1]=='-') rsltStr=rsltStr.slice(0,-1);{}
@@ -170,7 +171,7 @@ function ArrToInequality(arr){
     return rsltarr;
 }
 function calLetterBracketAndMnumber(letterId,strLen,property){
-    function print(){
+    function _print(){
         return;
         console.log(`n: ${letterId}, mNumber: ${mNumber}, bracketCount: ${bracketCount}`);
     }
@@ -211,7 +212,7 @@ function FormatLetter(letterId,str,property){
         console.log("skippedAmount: "+skippedAmount);
         console.log("mNumber"+mNumber);
     }
-    if(Object.keys(letterId)!==Object.keys(new Decimal())) letterId=new Decimal(letterId);
+    letterId=new Decimal(letterId);
     if(str===undefined){
         str="abcdefghijklmnopqrstuvwxyz";
     }
@@ -267,9 +268,12 @@ function FormatLetter(letterId,str,property){
     return "Format Error";
 }
 function GetDefaultBaseStr(base){
-    let chrArr="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/".split("")
+    let chrArr;
     if(base==64){
         chrArr="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");
+    }
+    else{
+    chrArr="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/".split("");
     }
     return chrArr;
 }
@@ -344,9 +348,8 @@ function NumberToBase(n,base=10,digits=20,minDigit,chrArr){
     if(isNegative) rsltStr='-'.concat(rsltStr);
     return rsltStr;
 }
-function RomanNumeralsUnit(n){
-    let notationOption;
-    ({notationOption}=player)
+function RomanNumeralsUnit(n,property){
+    let option=GetOption({...property,notation: "roman"});
     if(n.constructor===new Decimal().constructor) n=n.toNumber();
     if(n>3999+11/12){
         return "Format Error"
@@ -354,16 +357,13 @@ function RomanNumeralsUnit(n){
     let pump=Math.pow(2,-42);
     n+=pump;
     let prefixes=[
-                ["","M","MM","MMM","MMM"],
+                ["","M","MM","MMM"],
                 ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],
                 ["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],
                 ["","I","II","III","IV","V","VI","VII","VIII","XI"],
                 ]
     let rslt=""
-    let subPrefixes=notationOption.roman.altFractions ? Array(5) : ["","\xb7",":","\u2234","\u2237","\u2059",];
-    if(notationOption.roman.altFractions){
-        subPrefixes=ConsecutiveCharacter("\xb7",6)
-    }
+    let subPrefixes=option.altFractions ? ConsecutiveCharacter("\xb7",6) : ["","\xb7",":","\u2234","\u2237","\u2059",];
     //console.log(subPrefixes)
     let subPrefixes2=Array(5);
     subPrefixes.forEach(function(value,index){
@@ -461,10 +461,11 @@ function FormatValue(amount, property={}){
                 return FormatValue(power,{
                     ...option,
                     notation: option.subNotation,
-                    smallDec: 0, 
-                    dec: option.hExpDec,
+                    smallDec: option.expDec,
+                    dec: option.expDec,
                     maxBeforeNotate: option.subMaxBeforeNotate, 
-                    maxBeforeNegativePowerNotate: option.subMaxBeforeNegativePowerNotate})
+                    maxBeforeNegativePowerNotate: option.subMaxBeforeNegativePowerNotate,
+                    })
             }
             if(option.notation==="scientific"){
                 power=power.floor();
@@ -496,12 +497,7 @@ function FormatValue(amount, property={}){
                 return `${NumberToBase(mantissa,option.base,option.dec-rpower+(power.sign===-1))}e${calExpStr(power)}`;
             }
             if(option.notation==="logarithm"){
-                return `e${FormatValue(power,{
-                    ...option,
-                    notation: option.subNotation,
-                    dec: option.hExpDec,
-                    maxBeforeNotate: option.subMaxBeforeNotate, 
-                    maxBeforeNegativePowerNotate: option.subMaxBeforeNegativePowerNotate})}`
+                return `e${calExpStr(power)}`
             }
         }
         else if(Decimal.MagAbs(amount).lessThan(Decimal.fromComponents(1,option.maxNotatedLayer,powMaxExp))){
@@ -516,7 +512,7 @@ function FormatValue(amount, property={}){
         power=power.abs().div(3).floor().mul(3).mul(power.sign);
         if(power.lte(0)) power=power.add(-3);
         let letterId=power.div(3).floor();
-        let mantissaStr="";
+        let mantissaStr="1";
         let letterStr="";
         if(power.abs().lt(powMaxExp)){
             mantissa=amount.div(Decimal.pow(10,power));
@@ -528,7 +524,7 @@ function FormatValue(amount, property={}){
         if(option.notation==="emoji"){
             letterStr=FormatLetter(letterId,emojiList,option);
         }
-        if(letterStr!="") return mantissaStr+letterStr;
+        if(letterStr!="") return mantissaStr+""+letterStr;
     }
     if(option.notation==="standard"){
         let isNegative=false;
@@ -542,7 +538,7 @@ function FormatValue(amount, property={}){
             mantissa=amount.div(Decimal.pow(10,power));
             mantissaStr=NumberToBase(mantissa,option.base,option.dec);
         }
-        if(wordStr!="") return mantissaStr+wordStr;
+        if(wordStr!="") return mantissaStr+" "+wordStr;
     }
     if(option.notation==="seximal"){
         power=power.abs().div(4).floor().mul(4).mul(power.sign);
@@ -584,10 +580,12 @@ function FormatValue(amount, property={}){
             return rsltStr;
         }
         if(amount.eq(0)||Decimal.MagAbs(power).lt(amount.sign===-1?option.maxBeforeNegativePowerNotate:option.maxBeforeNotate)){
-            return ConvertToHTMLSafe(convertToInequality(amount,option.smallDec));
+            //ConvertToHTMLSafe
+            return (convertToInequality(amount,option.smallDec));
         }
         if(Decimal.MagAbs(amount).lessThan(Decimal.pow(option.base,powMaxExp))){
-            return ConvertToHTMLSafe('e'+convertToInequality(power,option.dec));
+            //ConvertToHTMLSafe
+            return ('e'+convertToInequality(power,option.dec));
         }
     }
     return "Format Error";

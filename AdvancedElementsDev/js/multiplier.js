@@ -29,7 +29,7 @@ function CalMult(){
         g=player.generatorList[0][i];
         let tmp=new Decimal(1)
         if(i<player.maxAstroidBoostGenerator){
-            tmp=new Decimal("2").pow(player.astroidAmount)
+            tmp=new Decimal(i==0 ? "2" : "1.2").pow(player.astroidAmount)
             if(player.upgrades[1][12].bought.gt(0)) tmp=tmp.mul(player.upgrades[1][12].value.pow(allocatableAstroids));
             if(i===0&&player.upgrades[1][22].bought.gt(0)){
                 tmp=tmp.mul(player.upgrades[1][22].value);

@@ -94,3 +94,13 @@ dev.printStandardList=function(){
     }
     return finalList
 }
+dev.fastCal=function(x){
+    return x.pow(new Decimal(1.5)).mul(3).div(2)
+}
+dev.getOldCostIncrease=function(generator){
+    generator.costMultDrift=generator.costMult;
+        if(generator.bought.gt(player.costDriftStartValue[0])&&generator.id[0]==0){
+            generator.costMultDrift=generator.costMultDrift.mul(generator.costMult.pow(generator.bought.minus(player.costDriftStartValue[0]).mul(generator.id[1]+1).pow(player.costDriftFactor).floor()))
+        }
+    return generator.costMultDrift;
+}

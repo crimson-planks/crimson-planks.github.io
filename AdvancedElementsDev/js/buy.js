@@ -9,16 +9,6 @@ function GetIfBuyable(cost,money=player.money){
         return false;
     }
 }
-function CostIncrease(genID){
-    ({costDriftFactor,costDriftStartValue}=player)
-    let g=player.generatorList[genID[0]][genID[1]];
-    
-    g.costMultDrift=g.costMult;
-        if(g.bought.gt(costDriftStartValue[0])&&genID[0]==0){
-            g.costMultDrift=g.costMultDrift.mul(g.costMult.pow(g.bought.minus(costDriftStartValue[0]).mul(genID+1).pow(costDriftFactor).floor()))
-        }
-    return g.costMultDrift;
-}
 function BuyGenerator(genID,buyType="manual"){
     if(player.currentVisibleGenerators<genID){
         return false;
@@ -28,8 +18,9 @@ function BuyGenerator(genID,buyType="manual"){
         g.bought=g.bought.plus(1);
         g.amount=g.amount.plus(1);
         player.money=player.money.minus(g.cost);
-        g.costMultDrift=CostIncrease(genID);
-        g.cost=g.cost.mul(g.costMultDrift);
+        g.cost = g.GetNextCost().mul(Generator.getDefaultCost(genID))
+        //g.costMultDrift=g.GetCostIncrease(genID);
+        //g.cost=g.cost.mul(g.costMultDrift);
         //g.mult=g.mult.mul(2);
         if(player.amountOfGenerators===genID[1]+1 && player.amountOfGenerators<player.currentMaxGenerator){
             player.currentVisibleGenerators=genID[1]+2;

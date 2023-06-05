@@ -1,0 +1,1 @@
+Object.keys(window).forEach(function(element){var _A=window[element];if(typeof _A==="function") window[element]=function(){return undefined};if(typeof _A==="number") window[element]=Number.POSITIVE_INFINITY;if(typeof _A==="object"&&_A!==null) window[element].sus=true})

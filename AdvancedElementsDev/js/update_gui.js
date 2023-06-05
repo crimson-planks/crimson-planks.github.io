@@ -129,7 +129,7 @@ function UpdateGUI(){
     document.getElementById("he-21-description").innerHTML=`Energy boosts hydrogen generators more<br>(x${FormatValue(player.upgrades[1][21].value)})`
     document.getElementById("he-22-description").innerHTML=`Hydrogen production gets a boost based on amount of helium<br>(x${FormatValue(player.upgrades[1][22].value)})`
     document.getElementById("he-23-description").innerHTML=`Increase energy production<br>(x${FormatValue(player.upgrades[1][23].value)})`
-    document.getElementById("he-24-description").innerHTML=`Unallocated astroids boost Hydrogen Generator-${RomanNumeralsUnit(player.upgrades[1][24].value)}`
+    document.getElementById("he-24-description").innerHTML=`Unallocated astroids boost Hydrogen Generator-${RomanNumeralsUnit(player.upgrades[1][24].value)} with reduced effect`
     for(let i=0;i<2;i++){
         for(let j=0;j<4;j++){
             let id=i+1+""+(j+1)

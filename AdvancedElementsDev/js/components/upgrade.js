@@ -50,7 +50,7 @@ class Upgrade{
                     this.cost=this.cost.mul("1e10")
                 }
                 else if(this.id[1]==="14"){
-                    this.cost=this.cost.mul(10);
+                    this.cost=this.cost.mul("10");
                 }
                 else if(this.id[1]==="21"){
                     this.cost=this.cost.mul("1e6");
@@ -59,11 +59,21 @@ class Upgrade{
                     this.cost=this.cost.mul("1e150");
                 }
                 else if(this.id[1]==="23"){
-                    this.cost=this.cost.mul("1e5");
+                    this.cost=this.cost.mul("1e14");
                 }
                 else if(this.id[1]==="24"){
                     this.cost=this.cost.mul("1e12");
                 }
+            }
+        }
+    }
+    getNextCost(){
+        if(this.id[0]===1){
+            if(this.id[1]===11){
+                return Decimal.pow(Decimal.dTen, this.bought).mul(this.defaultCost)
+            }
+            else if(this.id[1]===12){
+                return Decimal.pow("1e10", this.bought).mul(this.defaultCost)
             }
         }
     }
@@ -77,4 +87,11 @@ Upgrade.fromObject=function(object){
         Decimal.fromObject(object.defaultValue),
         Decimal.fromObject(object.value),
         Decimal.fromObject(object.bought));
+}
+Upgrade.costFunctionTable = {
+    "1":{
+        "11": function(bought){
+            console.log(bought)
+        }
+    }
 }
