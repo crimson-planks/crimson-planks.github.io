@@ -15,8 +15,12 @@ function ConvertToObject(object){
     if(object===null) return object;
     //if(object===Infinity) return "_Infinity";
     if(object===Infinity) return {_isInfinity:true}
-    if(["boolean","number","string","undefined"].includes(typeof object)){
+    if(typeof object==="number"&&isNaN(object)) return {_isNaN: true};
+    if(["boolean","number","string"].includes(typeof object)){
         return object;
+    }
+    if(typeof object==="undefined"){
+        return {_isUndefined: true}
     }
     if(typeof object==="bigint"){return {_type: "bigint",payload: object.toString()}};
     if(typeof object==="function"){
@@ -52,8 +56,9 @@ function ConvertToClass(object){
     //legacy support
     if(object==="_Infinity") return Infinity;
     //new infinity representation
+    if(object._isUndefined===true) return undefined;
     if(object._isInfinity===true) return Infinity;
-
+    if(object._isNaN===true) return NaN;
     if(object._type==="function") return Function(object.payload);
     if(object._type==="bigint") return BigInt(object.payload);
     if(typeof(object)=="object"){

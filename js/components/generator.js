@@ -26,6 +26,23 @@ class Generator{
         this.costMult=costMult;
         this.costMultDrift=costMultDrift;
     }
+    GetCost(boughtAmount){
+        function fastCal(x){
+            return x.pow(new Decimal(1.5)).mul(3).div(2)
+        }
+        let finalCost = this.costMult.pow(boughtAmount)
+        if(boughtAmount.gt(player.costDriftStartValue[0])&&this.id[0]===0){
+            finalCost = finalCost.mul(this.costMult.pow(fastCal(boughtAmount.minus(player.costDriftStartValue[0]).add(1)).mul(this.id[1]+1).mul(player.costDriftFactor).div(fastCostIncreaseCalcErrorFactor).floor()))
+        }
+        return finalCost
+    }
+    GetNextCost(){
+        return this.GetCost(this.bought)
+    }
+    getMaxBuyableAmount(money){
+
+    }
+    getMaxBuyableCost(){}
 }
 Generator.fromObject=function(object){
     return new Generator(object.id,
@@ -35,6 +52,9 @@ Generator.fromObject=function(object){
         Decimal.fromObject(object.mult),
         Decimal.fromObject(object.costMult),
         Decimal.fromObject(object.costMultDrift));
+}
+Generator.getDefaultCost=function(id){
+    return new Decimal("10").mul(new Decimal("10").pow(id[1]*id[1]))
 }
 Generator.getDefaultGenerator=function(id){
     return new Generator(

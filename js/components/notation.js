@@ -7,13 +7,13 @@ player.notationOption={
         subMaxBeforeNotate: 9,
         subMaxBeforeNegativePowerNotate: 9,
         maxExp: 9,
+        expDec: 0,
         maxNotatedLayer: 4,
         customNegative: false,
         negativeSign: '-',
         customNegativeExp: false,
         extraDigit: 0,
         hExpDec: 4,
-        expDec: 4,
         powerTower: false,
         base: 10,
         htmlSafe: true,
@@ -21,6 +21,9 @@ player.notationOption={
         show: 7,
         maxNotatedBracketCount: 3,
         subNotationArray: ["_same"]
+    },
+    logarithm:{
+        expDec: 2,
     },
     roman:{
         altFractions: false
@@ -39,6 +42,7 @@ player.notationOption={
         smallDec: 3
     }
 }
+
 const notationList=["scientific","engineering","engineering-alt","logarithm","letters","emoji","seximal","inequality","standard"];
 const notationGroup=[
     ["scientific","engineering","engineering-alt"],
